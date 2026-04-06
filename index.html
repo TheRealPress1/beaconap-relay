@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeaconAP — Relationship Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0b0e;
+  --bg-secondary: #111318;
+  --bg-tertiary: #181a21;
+  --bg-card: #14161c;
+  --bg-hover: #1c1f28;
+  --border: #222633;
+  --border-light: #2a2e3d;
+  --text-primary: #e8eaef;
+  --text-secondary: #8b90a0;
+  --text-tertiary: #5c6070;
+  --accent: #2f6fe4;
+  --accent-dim: rgba(47, 111, 228, 0.12);
+  --accent-glow: rgba(47, 111, 228, 0.25);
+  --accent-light: #5a93f0;
+  --green: #34d399;
+  --green-dim: rgba(52, 211, 153, 0.12);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245, 158, 11, 0.12);
+  --red: #ef4444;
+  --red-dim: rgba(239, 68, 68, 0.12);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167, 139, 250, 0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg-primary); color:var(--text-primary); overflow-x:hidden; min-height:100vh; }
+
+.sidebar { position:fixed; left:0; top:0; bottom:0; width:240px; background:var(--bg-secondary); border-right:1px solid var(--border); padding:24px 16px; display:flex; flex-direction:column; z-index:100; }
+.logo { display:flex; align-items:center; gap:10px; padding:0 8px; margin-bottom:36px; }
+.logo-mark svg { width:32px; height:32px; }
+.logo-text { font-family:'Playfair Display',serif; font-size:18px; font-weight:600; letter-spacing:-0.3px; line-height:1.2; }
+.logo-sub { font-size:9.5px; font-weight:500; color:var(--text-tertiary); letter-spacing:1.5px; text-transform:uppercase; }
+.nav-section { margin-bottom:24px; }
+.nav-label { font-size:10px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-tertiary); padding:0 12px; margin-bottom:8px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--radius-sm); cursor:pointer; font-size:13.5px; font-weight:400; color:var(--text-secondary); transition:all 0.15s; position:relative; }
+.nav-item:hover { background:var(--bg-hover); color:var(--text-primary); }
+.nav-item.active { background:var(--accent-dim); color:var(--accent-light); font-weight:500; }
+.nav-item.active::before { content:''; position:absolute; left:-16px; top:6px; bottom:6px; width:3px; background:var(--accent); border-radius:0 2px 2px 0; }
+.nav-icon { width:18px; height:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.nav-icon svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.nav-count { margin-left:auto; font-size:11px; font-weight:600; background:var(--bg-tertiary); padding:2px 7px; border-radius:10px; color:var(--text-tertiary); }
+.source-dot { margin-left:auto; width:6px; height:6px; border-radius:50%; }
+.sidebar-footer { margin-top:auto; padding:16px 8px; border-top:1px solid var(--border); }
+.user-pill { display:flex; align-items:center; gap:10px; }
+.user-avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#1a365d,#2563eb); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#fff; }
+.user-name { font-weight:500; font-size:13px; }
+.user-role { font-size:11px; color:var(--text-tertiary); }
+
+.main { margin-left:240px; min-height:100vh; }
+.topbar { position:sticky; top:0; background:rgba(10,11,14,0.85); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); padding:16px 32px; display:flex; align-items:center; justify-content:space-between; z-index:50; }
+.topbar-left h1 { font-family:'Playfair Display',serif; font-size:20px; font-weight:600; letter-spacing:-0.3px; }
+.topbar-left p { font-size:12.5px; color:var(--text-tertiary); margin-top:2px; }
+.topbar-actions { display:flex; gap:8px; }
+
+.btn { padding:8px 16px; border-radius:var(--radius-sm); font-size:13px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:var(--bg-tertiary); color:var(--text-secondary); transition:all 0.15s; display:flex; align-items:center; gap:6px; font-family:'DM Sans',sans-serif; }
+.btn:hover { background:var(--bg-hover); color:var(--text-primary); border-color:var(--border-light); }
+.btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+.btn-primary:hover { background:#2560cc; }
+.btn-sm { padding:5px 12px; font-size:11px; }
+
+.page { display:none; padding:28px 32px; }
+.page.active { display:block; animation:fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+.stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; position:relative; overflow:hidden; animation:fadeIn 0.4s ease backwards; }
+.stat-card:nth-child(1) { animation-delay:0.05s; } .stat-card:nth-child(2) { animation-delay:0.1s; }
+.stat-card:nth-child(3) { animation-delay:0.15s; } .stat-card:nth-child(4) { animation-delay:0.2s; }
+.stat-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.stat-card:nth-child(1)::after { background:var(--accent); }
+.stat-card:nth-child(2)::after { background:var(--green); }
+.stat-card:nth-child(3)::after { background:var(--amber); }
+.stat-card:nth-child(4)::after { background:var(--purple); }
+.stat-icon { width:36px; height:36px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
+.stat-icon svg { width:18px; height:18px; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; fill:none; }
+.stat-label { font-size:11.5px; font-weight:500; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px; }
+.stat-value { font-family:'Playfair Display',serif; font-size:32px; font-weight:700; letter-spacing:-1px; }
+.stat-change { font-size:11.5px; font-weight:500; margin-top:6px; }
+.stat-change.up { color:var(--green); } .stat-change.down { color:var(--red); }
+
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+.panel { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.panel-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.panel-header h3 { font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px; }
+.ph-icon { width:20px; height:20px; display:flex; align-items:center; justify-content:center; }
+.ph-icon svg { width:16px; height:16px; stroke:var(--accent-light); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.panel-body { padding:16px 20px; }
+
+.table-container { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.table-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border); }
+.table-header h3 { font-size:14px; font-weight:600; }
+.table-filters { display:flex; gap:6px; }
+.filter-chip { padding:5px 12px; border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid var(--border); background:transparent; color:var(--text-tertiary); transition:all 0.15s; font-family:'DM Sans',sans-serif; }
+.filter-chip:hover { color:var(--text-secondary); border-color:var(--border-light); }
+.filter-chip.active { background:var(--accent-dim); color:var(--accent-light); border-color:transparent; }
+
+table { width:100%; border-collapse:collapse; }
+th { text-align:left; padding:10px 20px; font-size:10.5px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; color:var(--text-tertiary); border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01); }
+td { padding:14px 20px; font-size:13.5px; border-bottom:1px solid rgba(255,255,255,0.03); }
+tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--bg-hover); }
+
+.contact-cell { display:flex; align-items:center; gap:12px; }
+.contact-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; flex-shrink:0; }
+.contact-name { font-weight:500; }
+.contact-company { font-size:11.5px; color:var(--text-tertiary); }
+
+.tag { display:inline-flex; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:500; }
+.tag-hot { background:var(--red-dim); color:var(--red); }
+.tag-warm { background:var(--amber-dim); color:var(--amber); }
+.tag-nurture { background:var(--accent-dim); color:var(--accent-light); }
+.tag-cold { background:rgba(255,255,255,0.05); color:var(--text-tertiary); }
+
+.engagement-bar { width:80px; height:4px; background:var(--bg-tertiary); border-radius:2px; overflow:hidden; }
+.engagement-fill { height:100%; border-radius:2px; }
+.last-touch { font-size:12.5px; color:var(--text-secondary); }
+.last-touch.overdue { color:var(--red); }
+.score-circle { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+
+.action-item { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.action-item:last-child { border-bottom:none; }
+.action-dot { width:8px; height:8px; border-radius:50%; margin-top:6px; flex-shrink:0; }
+.action-dot.high { background:var(--red); box-shadow:0 0 8px var(--red-dim); }
+.action-dot.medium { background:var(--amber); } .action-dot.low { background:var(--green); }
+.action-text { font-size:13px; line-height:1.5; }
+.action-meta { font-size:11px; color:var(--text-tertiary); margin-top:3px; }
+
+.content-item { display:flex; gap:14px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.content-item:last-child { border-bottom:none; }
+.ct-icon { width:40px; height:40px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ct-icon svg { width:18px; height:18px; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; fill:none; }
+.ct-icon-lg { width:48px; height:48px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.ct-icon-lg svg { width:22px; height:22px; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; fill:none; }
+.content-title { font-size:13px; font-weight:500; line-height:1.4; }
+.content-source { font-size:11px; color:var(--text-tertiary); margin-top:2px; }
+.content-match { font-size:10.5px; font-weight:500; margin-top:4px; color:var(--accent-light); }
+
+.contact-detail-header { display:flex; align-items:center; gap:20px; padding:24px 0; border-bottom:1px solid var(--border); margin-bottom:24px; }
+.detail-avatar { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:600; background:linear-gradient(135deg,#1e40af,#3b82f6); color:#fff; }
+.detail-info h2 { font-family:'Playfair Display',serif; font-size:24px; font-weight:600; }
+.detail-meta { font-size:13px; color:var(--text-secondary); margin-top:2px; display:flex; align-items:center; gap:12px; }
+.detail-tags { display:flex; gap:6px; margin-top:8px; }
+.detail-grid { display:grid; grid-template-columns:2fr 1fr; gap:16px; }
+
+.timeline-item { display:flex; gap:14px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.timeline-item:last-child { border-bottom:none; }
+.tl-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--bg-tertiary); }
+.tl-icon svg { width:14px; height:14px; stroke:var(--text-secondary); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.timeline-text { font-size:13px; line-height:1.5; }
+.timeline-date { font-size:11px; color:var(--text-tertiary); margin-top:2px; }
+
+.interest-tags { display:flex; flex-wrap:wrap; gap:6px; }
+.interest-tag { padding:5px 12px; border-radius:20px; font-size:11.5px; font-weight:500; background:var(--bg-tertiary); color:var(--text-secondary); border:1px solid var(--border); }
+
+.outreach-draft { background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; font-size:13px; line-height:1.7; color:var(--text-secondary); margin-top:12px; }
+.outreach-draft .hl { color:var(--accent-light); font-weight:500; }
+
+.pipeline-cols { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.pipeline-col { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); min-height:400px; }
+.pipeline-col-header { padding:14px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.pipeline-col-title { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; }
+.pipeline-col-count { font-size:11px; font-weight:600; color:var(--text-tertiary); background:var(--bg-tertiary); padding:2px 8px; border-radius:10px; }
+.pipeline-cards { padding:10px; }
+.pipeline-card { background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; margin-bottom:8px; cursor:pointer; transition:all 0.15s; }
+.pipeline-card:hover { border-color:var(--border-light); transform:translateY(-1px); }
+.pipeline-card-name { font-size:13px; font-weight:500; }
+.pipeline-card-role { font-size:11.5px; color:var(--text-tertiary); margin-top:2px; }
+.pipeline-card-footer { display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
+.pipeline-card-date { font-size:10.5px; color:var(--text-tertiary); }
+
+.insight-card { background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; margin-bottom:10px; }
+.insight-card-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.insight-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.insight-card-header span { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-tertiary); }
+.insight-card p { font-size:13px; line-height:1.6; color:var(--text-secondary); }
+
+.search-bar { display:flex; align-items:center; gap:8px; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 14px; width:260px; transition:border-color 0.15s; }
+.search-bar:focus-within { border-color:var(--accent); }
+.search-bar input { background:none; border:none; outline:none; color:var(--text-primary); font-size:13px; width:100%; font-family:'DM Sans',sans-serif; }
+.search-bar input::placeholder { color:var(--text-tertiary); }
+.si svg { width:14px; height:14px; stroke:var(--text-tertiary); fill:none; stroke-width:2; }
+
+.toast { position:fixed; bottom:24px; right:24px; background:var(--bg-card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:var(--radius-sm); padding:14px 20px; font-size:13px; z-index:1000; animation:slideUp 0.3s ease,fadeOut2 0.3s ease 3s forwards; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+@keyframes slideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeOut2 { to{opacity:0;transform:translateY(12px)} }
+
+.content-item-lg { display:flex; gap:16px; padding:20px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+.content-item-lg:last-child { border-bottom:none; }
+
+::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <img src="data:image/png;base64,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9u+pTmNZe3sVDx484r/++6/85S8f86cP/szNmzfZ2dlF1eO0IMZI8zGn1lEyw9tv9tRtcFTpW7r91/oc6r61HObGHUfEkpsmgKoQJc2cqXiQiGBorPAxwgTqe8pDDRRxj1XZowzRWC0EBxRFijU0tAFv18ZInzP23B9ZWpdtfpbtoPOBfa7NUWU+baCxmLoEUe99J07PbiE+XpBim+RhpLwahL29mq9v3bavv77FBx98yEf/+V988cWX3Lv3IAXAozAcDajr2FhXBw32SUSP+132NAPlPlFKwbf080lJBehjMaIieDyRAKKk2L8izgihRgRUKmzykMndMZWMKctIqR78tlE6QSKIx6nDmBWnzmKaoX8DPF48+oLUJke2MaT589obsgkoynEIfDff32DaL2OMNplMaMWqTWB8/n578KghbYzQauoqUtcV//znd/bxx3/lLx//jf/+y9/4/POb7O7uITgG5aCZdEiudZvCkO6tNDqlePe8q3886U/SzD9aDnbfjr1eH45DiRgSjQKIZlgMydIRJbiIaEp0c1qjkwn1t2P2QkXYrdjw23AqGuWmQARzqDgiRSdIgcZigl4ShxEthcMfdx/1LaW6rhmPx0wmk30WEuwflY6DID3Jch+Px50hJSLPJE5JwJusbC/dTFiasHDdxIUA3nkm4wnf3blrn3/5FX/6zz/z7//+B25+eZtoglnqL1WIuKIkWMQVfnpn9UTISOc3n+L5GuaI0Hff5h/t+090304aEVCT1AGjIgImKcvWJELhsChEKsQiBYara/y9OwQpuDf6b8rxLiO7ZKxvCG6IOo+pIVKQOmESJrWZvpm6uz0+/tFO+9d1PRPU/mFa52jQBvwBBoNBZ530OSitQpqAX7tExKkjxNCIGqR4urG3NyEE4/u79+zjj//Ge+99wIcffsQ/v73TkxRFDkityTyZLEpzmDTxAsA16QHRFLTJvC7STItFoVTFG1DX6M4OdfiW+/IxozhhpAHkorG6CbIirhmtI55WmGJnKk1T5lIAdL8wtS5bXdedhdTP1D4p7vXTUNe1Ne5t1yiHWUwHtZ1TTcl8NAkdohhKCBXeFYRg3Ll33z799HPeffd93nn3fW7e/IqHD3fwvqTpNfQyaR/DvKt+fBJdn5csSj1MejGf5jUxRSXShgBijMQmOTKKUYogKrhgFPUY7n9L9Q/h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" alt="BeaconAP" style="width:32px;height:32px;object-fit:contain;">
+    </div>
+    <div>
+      <div class="logo-text">BeaconAP</div>
+      <div class="logo-sub">Relationship Intelligence</div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="showPage('dashboard')"><span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Dashboard</div>
+    <div class="nav-item" onclick="showPage('contacts')"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Contacts<span class="nav-count">247</span></div>
+    <div class="nav-item" onclick="showPage('pipeline')"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>Pipeline</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Intelligence</div>
+    <div class="nav-item" onclick="showPage('content')"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Content Feed<span class="nav-count">12</span></div>
+    <div class="nav-item" onclick="showPage('insights')"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>AI Insights</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Connected Sources</div>
+    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span>LinkedIn<span class="source-dot" style="background:var(--green)"></span></div>
+    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Gmail<span class="source-dot" style="background:var(--green)"></span></div>
+    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>iMessage<span class="source-dot" style="background:var(--green)"></span></div>
+    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></span>Granola<span class="source-dot" style="background:var(--green)"></span></div>
+    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>Apollo.io<span class="source-dot" style="background:var(--amber)"></span></div>
+  </div>
+  <div class="sidebar-footer"><div class="user-pill"><div class="user-avatar">MS</div><div><div class="user-name">Michael Sands</div><div class="user-role">Founder · BeaconAP</div></div></div></div>
+</nav>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left"><h1 id="page-title">Dashboard</h1><p id="page-subtitle">Friday, March 27, 2026 · 12 actions pending</p></div>
+    <div class="topbar-actions">
+      <div class="search-bar"><span class="si"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input type="text" placeholder="Search contacts, companies..."></div>
+      <button class="btn" onclick="showPage('add-contact')">+ Add Contact</button>
+      <button class="btn btn-primary" onclick="showToast('Syncing LinkedIn, Gmail, iMessage, Granola...')">Sync Sources</button>
+    </div>
+  </div>
+
+  <!-- ADD CONTACT -->
+  <div class="page" id="page-add-contact">
+    <button class="btn" onclick="showPage('contacts')" style="margin-bottom:20px">← Back to Contacts</button>
+    <div style="max-width:720px;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:600;margin-bottom:6px">Add Contacts</h2>
+      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:32px">Import contacts manually or sync from a connected platform.</p>
+
+      <!-- Manual Entry -->
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span>Manual Entry</h3></div>
+        <div class="panel-body">
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Add a single contact with their details. AI will enrich their profile automatically.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div>
+              <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">First Name</label>
+              <input type="text" placeholder="e.g. Sarah" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Last Name</label>
+              <input type="text" placeholder="e.g. Chen" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Company</label>
+              <input type="text" placeholder="e.g. BlackRock" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Title</label>
+              <input type="text" placeholder="e.g. Managing Director" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div style="grid-column:span 2">
+              <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Email</label>
+              <input type="email" placeholder="e.g. sarah.chen@blackrock.com" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Source</label>
+              <select style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;cursor:pointer;">
+                <option>Select source...</option>
+                <option>Conference</option>
+                <option>LinkedIn</option>
+                <option>Referral</option>
+                <option>Cold Outreach</option>
+                <option>iMessage</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Status</label>
+              <select style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;cursor:pointer;">
+                <option>Cold</option>
+                <option>Nurture</option>
+                <option>Warm</option>
+                <option>Hot</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="showToast('Contact added successfully')" style="width:100%;justify-content:center;padding:12px">Add Contact</button>
+        </div>
+      </div>
+
+      <!-- Sync Import -->
+      <div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:12px;margin:24px 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px">Or sync from a platform</span><div style="flex:1;height:1px;background:var(--border)"></div></div></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <!-- LinkedIn -->
+        <div class="panel" style="cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Syncing LinkedIn connections...')">
+          <div class="panel-body" style="display:flex;align-items:center;gap:14px;padding:20px">
+            <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(10,102,194,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0a66c2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600">LinkedIn</div>
+              <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Import connections and sync activity</div>
+              <div style="font-size:11px;color:var(--green);margin-top:4px;font-weight:500">Connected</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contacts / Phone -->
+        <div class="panel" style="cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Importing from Contacts...')">
+          <div class="panel-body" style="display:flex;align-items:center;gap:14px;padding:20px">
+            <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(52,211,153,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600">Contacts</div>
+              <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Import from phone or Google contacts</div>
+              <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;font-weight:500">Ready to connect</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="panel" style="cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Connecting WhatsApp...')">
+          <div class="panel-body" style="display:flex;align-items:center;gap:14px;padding:20px">
+            <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(37,211,102,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600">WhatsApp</div>
+              <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Sync contacts and conversation signals</div>
+              <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;font-weight:500">Ready to connect</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Instagram -->
+        <div class="panel" style="cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Connecting Instagram...')">
+          <div class="panel-body" style="display:flex;align-items:center;gap:14px;padding:20px">
+            <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(225,48,108,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:600">Instagram</div>
+              <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Import followers and DM contacts</div>
+              <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;font-weight:500">Ready to connect</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-icon" style="background:var(--accent-dim)"><svg viewBox="0 0 24 24" stroke="var(--accent)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="stat-label">Total Network</div><div class="stat-value">247</div><div class="stat-change up">+18 this month</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:var(--green-dim)"><svg viewBox="0 0 24 24" stroke="var(--green)"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="stat-label">Engaged (30d)</div><div class="stat-value">89</div><div class="stat-change up">+12% vs. last month</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:var(--amber-dim)"><svg viewBox="0 0 24 24" stroke="var(--amber)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="stat-label">At Risk (30d+ silent)</div><div class="stat-value">34</div><div class="stat-change down">+6 need attention</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:var(--purple-dim)"><svg viewBox="0 0 24 24" stroke="var(--purple)"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div><div class="stat-label">Content Shared</div><div class="stat-value">52</div><div class="stat-change up">23% open rate</div></div>
+    </div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>Priority Actions</h3><button class="btn btn-sm">View All</button></div>
+        <div class="panel-body">
+          <div class="action-item"><div class="action-dot high"></div><div><div class="action-text"><strong>Sarah Chen</strong> mentioned AI governance challenges in last Granola meeting notes — share the FCA regulatory brief from this week</div><div class="action-meta">BlackRock · Last touch: 3 days ago · Auto-detected from Granola</div></div></div>
+          <div class="action-item"><div class="action-dot high"></div><div><div class="action-text"><strong>David Park</strong> is attending Finovate London next week — you're both going. Warm intro opportunity.</div><div class="action-meta">Citadel · Last touch: 12 days ago · Detected via LinkedIn event</div></div></div>
+          <div class="action-item"><div class="action-dot medium"></div><div><div class="action-text"><strong>Rachel Morrison</strong> published a piece on agentic AI in asset management — engage and reference your recent insights post</div><div class="action-meta">Deloitte · Last touch: 21 days ago · Detected via LinkedIn activity</div></div></div>
+          <div class="action-item"><div class="action-dot medium"></div><div><div class="action-text"><strong>James Liu</strong> hasn't been contacted in 45 days — was a warm lead from the SIFMA conference</div><div class="action-meta">Fidelity Investments · Risk: slipping · Source: Apollo sequence</div></div></div>
+          <div class="action-item"><div class="action-dot low"></div><div><div class="action-text">5 new connections from <strong>Capital Markets AI Summit</strong> — review and tag interests</div><div class="action-meta">Conference · Mar 22 · Auto-imported from LinkedIn</div></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Content to Share</h3><button class="btn btn-sm">Settings</button></div>
+        <div class="panel-body">
+          <div class="content-item"><div class="ct-icon" style="background:var(--red-dim)"><svg viewBox="0 0 24 24" stroke="var(--red)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div><div class="content-title">FCA releases final guidance on AI model risk in financial services</div><div class="content-source">Financial Times · 2 hours ago</div><div class="content-match">Matches 14 contacts interested in regulation</div></div></div>
+          <div class="content-item"><div class="ct-icon" style="background:var(--purple-dim)"><svg viewBox="0 0 24 24" stroke="var(--purple)"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg></div><div><div class="content-title">The AI-Powered Back Office: How Fund Admins Are Actually Using LLMs</div><div class="content-source">Capital Allocators Podcast · Mar 25</div><div class="content-match">Matches 8 contacts in fund operations</div></div></div>
+          <div class="content-item"><div class="ct-icon" style="background:var(--green-dim)"><svg viewBox="0 0 24 24" stroke="var(--green)"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div><div class="content-title">McKinsey: GenAI in Asset Management — 2026 adoption benchmarks</div><div class="content-source">McKinsey & Co · Mar 24</div><div class="content-match">Matches 22 contacts · High relevance across network</div></div></div>
+          <div class="content-item"><div class="ct-icon" style="background:var(--amber-dim)"><svg viewBox="0 0 24 24" stroke="var(--amber)"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="content-title">AI in Capital Markets Summit — NYC, April 8-9</div><div class="content-source">SIFMA · Registration open</div><div class="content-match">6 contacts attending · Networking opportunity</div></div></div>
+          <div class="content-item"><div class="ct-icon" style="background:var(--accent-dim)"><svg viewBox="0 0 24 24" stroke="var(--accent-light)"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div><div class="content-title">Your draft: "Year 20AI — Agentic Operating Models" got 2.4K impressions</div><div class="content-source">LinkedIn · Published Mar 20</div><div class="content-match">Reshare opportunity: 8 contacts engaged but haven't connected</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACTS -->
+  <div class="page" id="page-contacts">
+    <div class="table-container">
+      <div class="table-header"><h3>All Contacts</h3><div class="table-filters"><button class="filter-chip active">All</button><button class="filter-chip">Hot</button><button class="filter-chip">Warm</button><button class="filter-chip">Nurture</button><button class="filter-chip">Cold</button><button class="filter-chip">At Risk</button></div></div>
+      <table><thead><tr><th>Contact</th><th>Status</th><th>Engagement</th><th>Last Touch</th><th>Source</th><th>Score</th></tr></thead>
+      <tbody>
+        <tr onclick="showPage('contact-detail')"><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff">SC</div><div><div class="contact-name">Sarah Chen</div><div class="contact-company">Managing Director · BlackRock</div></div></div></td><td><span class="tag tag-hot">Hot</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:92%;background:var(--green)"></div></div></td><td><span class="last-touch">3 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">Conference</td><td><div class="score-circle" style="background:var(--green-dim);color:var(--green)">94</div></td></tr>
+        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">DP</div><div><div class="contact-name">David Park</div><div class="contact-company">Head of AI Strategy · Citadel</div></div></div></td><td><span class="tag tag-warm">Warm</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:68%;background:var(--amber)"></div></div></td><td><span class="last-touch">12 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">LinkedIn</td><td><div class="score-circle" style="background:var(--amber-dim);color:var(--amber)">72</div></td></tr>
+        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#dc2626,#f87171);color:#fff">RM</div><div><div class="contact-name">Rachel Morrison</div><div class="contact-company">Partner, AI Practice · Deloitte</div></div></div></td><td><span class="tag tag-nurture">Nurture</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:45%;background:var(--accent)"></div></div></td><td><span class="last-touch overdue">21 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">Referral</td><td><div class="score-circle" style="background:var(--accent-dim);color:var(--accent-light)">58</div></td></tr>
+        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#0d9488,#2dd4bf);color:#fff">JL</div><div><div class="contact-name">James Liu</div><div class="contact-company">VP Operations · Fidelity Investments</div></div></div></td><td><span class="tag tag-cold">Cold</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:18%;background:var(--text-tertiary)"></div></div></td><td><span class="last-touch overdue">45 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">SIFMA</td><td><div class="score-circle" style="background:var(--red-dim);color:var(--red)">24</div></td></tr>
+        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff">AK</div><div><div class="contact-name">Anika Kapoor</div><div class="contact-company">CTO · Broadridge Financial</div></div></div></td><td><span class="tag tag-warm">Warm</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:75%;background:var(--amber)"></div></div></td><td><span class="last-touch">8 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">Cold outreach</td><td><div class="score-circle" style="background:var(--amber-dim);color:var(--amber)">78</div></td></tr>
+        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#4338ca,#818cf8);color:#fff">MT</div><div><div class="contact-name">Marcus Thompson</div><div class="contact-company">Head of Digital · State Street</div></div></div></td><td><span class="tag tag-hot">Hot</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:88%;background:var(--green)"></div></div></td><td><span class="last-touch">1 day ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">Referral</td><td><div class="score-circle" style="background:var(--green-dim);color:var(--green)">91</div></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <!-- CONTACT DETAIL -->
+  <div class="page" id="page-contact-detail">
+    <button class="btn" onclick="showPage('contacts')" style="margin-bottom:16px">← Back to Contacts</button>
+    <div class="contact-detail-header">
+      <div class="detail-avatar">SC</div>
+      <div><div class="detail-info"><h2>Sarah Chen</h2><div class="detail-meta"><span>Managing Director · BlackRock</span><span style="color:var(--text-tertiary)">·</span><span>New York, NY</span><span style="color:var(--text-tertiary)">·</span><span style="color:var(--green)">Active</span></div></div><div class="detail-tags"><span class="tag tag-hot">Hot Lead</span><span class="tag" style="background:var(--accent-dim);color:var(--accent-light)">AI Governance</span><span class="tag" style="background:var(--purple-dim);color:var(--purple)">Fund Ops</span></div></div>
+      <div style="margin-left:auto;display:flex;gap:8px"><button class="btn">Email</button><button class="btn">iMessage</button><button class="btn btn-primary">AI Draft</button></div>
+    </div>
+    <div class="detail-grid">
+      <div>
+        <div class="panel"><div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>Interaction Timeline</h3></div>
+          <div class="panel-body">
+            <div class="timeline-item"><div class="tl-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div><div><div class="timeline-text"><strong>30-min discovery call</strong> — Discussed AI governance pain points. Compliance team blocking LLM rollout due to model risk concerns. Interested in BeaconAP's oversight framework.</div><div class="timeline-date">Mar 24, 2026 · Captured via Granola meeting notes</div></div></div>
+            <div class="timeline-item"><div class="tl-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><div class="timeline-text">Sent follow-up email with AI governance whitepaper. <strong>Opened 3x</strong>, forwarded to 1 colleague.</div><div class="timeline-date">Mar 24, 2026 · Gmail tracked</div></div></div>
+            <div class="timeline-item"><div class="tl-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><div><div class="timeline-text">iMessage exchange — confirmed she'll review whitepaper over the weekend and loop in her head of risk.</div><div class="timeline-date">Mar 24, 2026 · iMessage</div></div></div>
+            <div class="timeline-item"><div class="tl-icon"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></div><div><div class="timeline-text">Connected on LinkedIn. Liked your "Year 20AI" post and commented on the agentic ops section.</div><div class="timeline-date">Mar 20, 2026 · LinkedIn</div></div></div>
+            <div class="timeline-item"><div class="tl-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="timeline-text">Met at <strong>Capital Markets AI Summit</strong> in NYC. Attended your panel on AI operating models.</div><div class="timeline-date">Mar 18, 2026 · Conference</div></div></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:16px"><div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>Suggested Outreach</h3><button class="btn btn-primary btn-sm" onclick="showToast('Draft copied to clipboard')">Copy Draft</button></div>
+          <div class="panel-body"><div style="font-size:11px;color:var(--text-tertiary);margin-bottom:8px">AI-generated based on Sarah's interests and recent Granola notes</div>
+            <div class="outreach-draft">Hi Sarah,<br><br>Great speaking last week — your point about <span class="hl">compliance teams needing a practical framework</span> before greenlighting LLM pilots really stuck with me.<br><br>Wanted to flag this: the <span class="hl">FCA just released final guidance on AI model risk</span> in financial services (came out this morning). Given what you shared about BlackRock's internal debate, figured this would be immediately useful for your team.<br><br>Happy to walk through how we've been helping firms structure their <span class="hl">AI oversight models</span> to get compliance comfortable — without slowing down the business side. Would 20 minutes next week work?<br><br>Best,<br>Michael</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="panel"><div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>Tracked Interests</h3></div>
+          <div class="panel-body"><div class="interest-tags"><span class="interest-tag">AI Governance</span><span class="interest-tag">Model Risk</span><span class="interest-tag">LLM Compliance</span><span class="interest-tag">Fund Operations</span><span class="interest-tag">Agentic AI</span><span class="interest-tag">Operating Models</span><span class="interest-tag">Regulatory Tech</span></div>
+            <div style="margin-top:16px"><div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">Detected from</div><div style="font-size:12.5px;color:var(--text-secondary);line-height:2">Granola notes (Mar 24) · LinkedIn activity · Gmail exchanges · iMessage · Conference notes</div></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:16px"><div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Content for Sarah</h3></div>
+          <div class="panel-body">
+            <div class="content-item"><div class="ct-icon" style="background:var(--red-dim)"><svg viewBox="0 0 24 24" stroke="var(--red)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="content-title">FCA final guidance on AI model risk</div><div class="content-source">Financial Times · Today</div><div class="content-match">98% match — AI Governance, Regulatory</div></div></div>
+            <div class="content-item"><div class="ct-icon" style="background:var(--purple-dim)"><svg viewBox="0 0 24 24" stroke="var(--purple)"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div><div><div class="content-title">How BlackRock's peers are deploying AI guardrails</div><div class="content-source">Risk.net Podcast · Mar 23</div><div class="content-match">91% match — Model Risk, LLM Compliance</div></div></div>
+            <div class="content-item"><div class="ct-icon" style="background:var(--green-dim)"><svg viewBox="0 0 24 24" stroke="var(--green)"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div><div class="content-title">Your insight: "Year 20AI — Agentic Operating Models"</div><div class="content-source">BeaconAP Blog · Mar 20</div><div class="content-match">Send as follow-up to reinforce thought leadership</div></div></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:16px"><div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Relationship Score</h3></div>
+          <div class="panel-body" style="text-align:center;padding:24px">
+            <div class="score-circle" style="width:80px;height:80px;font-size:28px;margin:0 auto;background:var(--green-dim);color:var(--green)">94</div>
+            <div style="font-size:12px;color:var(--text-tertiary);margin-top:12px">Highly engaged · Trending up</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;text-align:left">
+              <div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px">Recency</div><div style="font-size:14px;font-weight:600;color:var(--green)">3 days</div></div>
+              <div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px">Frequency</div><div style="font-size:14px;font-weight:600;color:var(--green)">4x / month</div></div>
+              <div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px">Depth</div><div style="font-size:14px;font-weight:600;color:var(--amber)">Medium</div></div>
+              <div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px">Momentum</div><div style="font-size:14px;font-weight:600;color:var(--green)">Rising</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="page" id="page-pipeline">
+    <div class="pipeline-cols">
+      <div class="pipeline-col"><div class="pipeline-col-header"><span class="pipeline-col-title" style="color:var(--text-tertiary)">New / Cold</span><span class="pipeline-col-count">42</span></div><div class="pipeline-cards"><div class="pipeline-card"><div class="pipeline-card-name">Elena Vasquez</div><div class="pipeline-card-role">CIO · Wellington Mgmt</div><div class="pipeline-card-footer"><span class="pipeline-card-date">Added Mar 22</span><span class="tag tag-cold" style="font-size:10px">Cold</span></div></div><div class="pipeline-card"><div class="pipeline-card-name">Tom Bradley</div><div class="pipeline-card-role">SVP Tech · BNY Mellon</div><div class="pipeline-card-footer"><span class="pipeline-card-date">Added Mar 20</span><span class="tag tag-cold" style="font-size:10px">Cold</span></div></div><div class="pipeline-card"><div class="pipeline-card-name">James Liu</div><div class="pipeline-card-role">VP Ops · Fidelity</div><div class="pipeline-card-footer"><span class="pipeline-card-date">SIFMA · Feb 10</span><span class="tag" style="font-size:10px;background:var(--red-dim);color:var(--red)">Slipping</span></div></div></div></div>
+      <div class="pipeline-col"><div class="pipeline-col-header"><span class="pipeline-col-title" style="color:var(--accent-light)">Nurturing</span><span class="pipeline-col-count">38</span></div><div class="pipeline-cards"><div class="pipeline-card"><div class="pipeline-card-name">Rachel Morrison</div><div class="pipeline-card-role">Partner · Deloitte</div><div class="pipeline-card-footer"><span class="pipeline-card-date">Touch: 21d ago</span><span class="tag tag-nurture" style="font-size:10px">Nurture</span></div></div><div class="pipeline-card"><div class="pipeline-card-name">Priya Mehta</div><div class="pipeline-card-role">Dir. Strategy · DTCC</div><div class="pipeline-card-footer"><span class="pipeline-card-date">Touch: 14d ago</span><span class="tag tag-nurture" style="font-size:10px">Nurture</span></div></div></div></div>
+      <div class="pipeline-col"><div class="pipeline-col-header"><span class="pipeline-col-title" style="color:var(--amber)">Warm</span><span class="pipeline-col-count">24</span></div><div class="pipeline-cards"><div class="pipeline-card"><div class="pipeline-card-name">David Park</div><div class="pipeline-card-role">Head of AI · Citadel</div><div class="pipeline-card-footer"><span class="pipeline-card-date">Touch: 12d ago</span><span class="tag tag-warm" style="font-size:10px">Warm</span></div></div><div class="pipeline-card"><div class="pipeline-card-name">Anika Kapoor</div><div class="pipeline-card-role">CTO · Broadridge</div><div class="pipeline-card-footer"><span class="pipeline-card-date">Touch: 8d ago</span><span class="tag tag-warm" style="font-size:10px">Warm</span></div></div></div></div>
+      <div class="pipeline-col"><div class="pipeline-col-header"><span class="pipeline-col-title" style="color:var(--green)">Hot / Client</span><span class="pipeline-col-count">12</span></div><div class="pipeline-cards"><div class="pipeline-card" onclick="showPage('contact-detail')"><div class="pipeline-card-name">Sarah Chen</div><div class="pipeline-card-role">MD · BlackRock</div><div class="pipeline-card-footer"><span class="pipeline-card-date">Touch: 3d ago</span><span class="tag tag-hot" style="font-size:10px">Hot</span></div></div><div class="pipeline-card"><div class="pipeline-card-name">Marcus Thompson</div><div class="pipeline-card-role">Head Digital · State St</div><div class="pipeline-card-footer"><span class="pipeline-card-date">Touch: 1d ago</span><span class="tag tag-hot" style="font-size:10px">Hot</span></div></div></div></div>
+    </div>
+  </div>
+
+  <!-- CONTENT FEED -->
+  <div class="page" id="page-content">
+    <div class="panel">
+      <div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>AI-Curated Content Feed</h3><div class="table-filters"><button class="filter-chip active">All</button><button class="filter-chip">Articles</button><button class="filter-chip">Podcasts</button><button class="filter-chip">Events</button><button class="filter-chip">Your Content</button></div></div>
+      <div class="panel-body">
+        <div class="content-item-lg"><div class="ct-icon-lg" style="background:var(--red-dim)"><svg viewBox="0 0 24 24" stroke="var(--red)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div style="flex:1"><div class="content-title" style="font-size:14px">FCA releases final guidance on AI model risk in financial services</div><div class="content-source" style="margin-top:4px">Financial Times · 2 hours ago</div><div class="content-match" style="margin-top:6px">Matches 14 contacts: Sarah Chen, David Park, Rachel Morrison, +11 more</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-sm" onclick="showToast('Sharing with 14 matched contacts...')">Share with matches</button><button class="btn btn-sm">Copy link</button><button class="btn btn-sm">Draft personalized intros</button></div></div></div>
+        <div class="content-item-lg"><div class="ct-icon-lg" style="background:var(--purple-dim)"><svg viewBox="0 0 24 24" stroke="var(--purple)"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div><div style="flex:1"><div class="content-title" style="font-size:14px">The AI-Powered Back Office: How Fund Admins Are Actually Using LLMs</div><div class="content-source" style="margin-top:4px">Capital Allocators Podcast · Mar 25</div><div class="content-match" style="margin-top:6px">Matches 8 contacts in fund operations: James Liu, Anika Kapoor, +6 more</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-sm" onclick="showToast('Sharing with 8 matched contacts...')">Share with matches</button><button class="btn btn-sm">Copy link</button><button class="btn btn-sm">Draft personalized intros</button></div></div></div>
+        <div class="content-item-lg"><div class="ct-icon-lg" style="background:var(--green-dim)"><svg viewBox="0 0 24 24" stroke="var(--green)"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div style="flex:1"><div class="content-title" style="font-size:14px">McKinsey: GenAI in Asset Management — 2026 Adoption Benchmarks</div><div class="content-source" style="margin-top:4px">McKinsey & Company · Mar 24</div><div class="content-match" style="margin-top:6px">Matches 22 contacts · Highest relevance score this week</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-sm" onclick="showToast('Sharing with 22 matched contacts...')">Share with matches</button><button class="btn btn-sm">Copy link</button><button class="btn btn-sm">Draft personalized intros</button></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI INSIGHTS -->
+  <div class="page" id="page-insights">
+    <div class="two-col">
+      <div><div class="panel"><div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>Network Intelligence</h3></div>
+        <div class="panel-body">
+          <div class="insight-card"><div class="insight-card-header"><div class="insight-dot" style="background:var(--red)"></div><span>Conversion Signal</span></div><p><strong>Sarah Chen</strong> forwarded your AI governance whitepaper to a colleague at BlackRock. This is a strong buying signal — she's socializing your expertise internally. Recommend scheduling a follow-up call within 48 hours with a specific proposal for a governance framework audit.</p></div>
+          <div class="insight-card"><div class="insight-card-header"><div class="insight-dot" style="background:var(--amber)"></div><span>Relationship Decay</span></div><p><strong>12 contacts</strong> from SIFMA conference (Feb) haven't been touched in 30+ days. You're losing the warmth from in-person meetings. Batch outreach recommended with personalized references to conversations had at the event.</p></div>
+          <div class="insight-card"><div class="insight-card-header"><div class="insight-dot" style="background:var(--accent)"></div><span>Network Gap</span></div><p>Your network is heavy on <strong>asset management</strong> (62%) but light on <strong>exchanges and market infrastructure</strong> (8%). BeaconAP's services apply equally to both. Consider targeting NASDAQ, ICE, and CME Group leaders through upcoming industry events.</p></div>
+          <div class="insight-card"><div class="insight-card-header"><div class="insight-dot" style="background:var(--green)"></div><span>Content Performance</span></div><p>Your "Year 20AI" LinkedIn post generated <strong>2,400 impressions</strong> and <strong>8 profile visits</strong> from capital markets executives. 3 of those visitors aren't in your CRM yet — auto-importing as new contacts with tag "Inbound, LinkedIn."</p></div>
+        </div>
+      </div></div>
+      <div><div class="panel"><div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>Network Health</h3></div>
+        <div class="panel-body">
+          <div style="margin-bottom:20px"><div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px">Engagement Distribution</div><div style="display:flex;gap:4px;height:24px;border-radius:6px;overflow:hidden"><div style="flex:12;background:var(--green);border-radius:4px 0 0 4px"></div><div style="flex:24;background:var(--amber)"></div><div style="flex:38;background:var(--accent)"></div><div style="flex:42;background:var(--text-tertiary);border-radius:0 4px 4px 0"></div></div><div style="display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--text-tertiary)"><span>Hot (12)</span><span>Warm (24)</span><span>Nurture (38)</span><span>Cold (42)</span></div></div>
+          <div style="margin-bottom:20px"><div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px">Top Industries</div>
+            <div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Asset Management</span><span style="color:var(--text-tertiary)">62%</span></div><div style="height:6px;background:var(--bg-tertiary);border-radius:3px"><div style="width:62%;height:100%;background:var(--accent);border-radius:3px"></div></div></div>
+            <div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Consulting / Advisory</span><span style="color:var(--text-tertiary)">18%</span></div><div style="height:6px;background:var(--bg-tertiary);border-radius:3px"><div style="width:18%;height:100%;background:var(--purple);border-radius:3px"></div></div></div>
+            <div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Exchanges & Infra</span><span style="color:var(--text-tertiary)">8%</span></div><div style="height:6px;background:var(--bg-tertiary);border-radius:3px"><div style="width:8%;height:100%;background:var(--amber);border-radius:3px"></div></div></div>
+            <div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Service Providers</span><span style="color:var(--text-tertiary)">12%</span></div><div style="height:6px;background:var(--bg-tertiary);border-radius:3px"><div style="width:12%;height:100%;background:var(--green);border-radius:3px"></div></div></div>
+          </div>
+          <div><div style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px">Source Channels</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div style="background:var(--bg-tertiary);padding:12px;border-radius:var(--radius-sm);text-align:center"><div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif">38%</div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Conferences</div></div><div style="background:var(--bg-tertiary);padding:12px;border-radius:var(--radius-sm);text-align:center"><div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif">29%</div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">LinkedIn</div></div><div style="background:var(--bg-tertiary);padding:12px;border-radius:var(--radius-sm);text-align:center"><div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif">21%</div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Referrals</div></div><div style="background:var(--bg-tertiary);padding:12px;border-radius:var(--radius-sm);text-align:center"><div style="font-size:20px;font-weight:700;font-family:'Playfair Display',serif">12%</div><div style="font-size:11px;color:var(--text-tertiary);margin-top:2px">Cold Outreach</div></div></div></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+function showPage(id){const m={'dashboard':{title:'Dashboard',sub:'Friday, March 27, 2026 · 12 actions pending'},'contacts':{title:'Contacts',sub:'247 people in your network'},'contact-detail':{title:'Contact Detail',sub:'Sarah Chen · BlackRock'},'pipeline':{title:'Pipeline',sub:'Relationship funnel overview'},'content':{title:'Content Feed',sub:'AI-curated content matched to your network'},'insights':{title:'AI Insights',sub:'Network intelligence and recommendations'},'add-contact':{title:'Add Contact',sub:'Import or sync new contacts'}};document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const t=document.getElementById('page-'+id);if(t)t.classList.add('active');const i=m[id]||{title:id,sub:''};document.getElementById('page-title').textContent=i.title;document.getElementById('page-subtitle').textContent=i.sub;document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const ni=document.querySelectorAll('.nav-item'),nm={'dashboard':0,'contacts':1,'pipeline':2,'content':3,'insights':4};if(nm[id]!==undefined)ni[nm[id]].classList.add('active');if(id==='contact-detail')ni[1].classList.add('active');}
+function showToast(msg){const e=document.querySelector('.toast');if(e)e.remove();const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3500);}
+document.querySelectorAll('.filter-chip').forEach(c=>{c.addEventListener('click',function(){this.parentElement.querySelectorAll('.filter-chip').forEach(x=>x.classList.remove('active'));this.classList.add('active');});});
+</script>
+</body>
+</html>
