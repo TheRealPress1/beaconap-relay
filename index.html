@@ -226,11 +226,14 @@ tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--b
   </div>
   <div class="nav-section">
     <div class="nav-label">Connected Sources</div>
-    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span>LinkedIn<span class="source-dot" style="background:var(--green)"></span></div>
-    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Gmail<span class="source-dot" style="background:var(--green)"></span></div>
-    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>iMessage<span class="source-dot" style="background:var(--green)"></span></div>
-    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></span>Granola<span class="source-dot" style="background:var(--green)"></span></div>
-    <div class="nav-item"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>Apollo.io<span class="source-dot" style="background:var(--amber)"></span></div>
+    <div class="nav-item" onclick="showSourceSettings('csv')"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>CSV Import<span class="source-dot" style="background:var(--green)"></span></div>
+    <div class="nav-item" onclick="showSourceSettings('gmail')"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>Gmail<span class="source-dot" style="background:var(--green)"></span></div>
+    <div class="nav-item" onclick="showSourceSettings('granola')"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></span>Granola<span class="source-dot" style="background:var(--green)"></span></div>
+    <div class="nav-item" onclick="showSourceSettings('apollo')"><span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>Apollo.io<span class="source-dot" style="background:var(--amber)"></span></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Settings</div>
+    <div class="nav-item" onclick="openApiSettings()"><span class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>API Settings</div>
   </div>
   <div class="sidebar-footer"><div class="user-pill"><div class="user-avatar">MS</div><div><div class="user-name">Michael Sands</div><div class="user-role">Founder · BeaconAP</div></div></div></div>
 </nav>
@@ -241,7 +244,7 @@ tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--b
     <div class="topbar-actions">
       <div class="search-bar"><span class="si"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input type="text" placeholder="Search contacts, companies..."></div>
       <button class="btn" onclick="showPage('add-contact')">+ Add Contact</button>
-      <button class="btn btn-primary" onclick="showToast('Syncing LinkedIn, Gmail, iMessage, Granola...')">Sync Sources</button>
+      <button class="btn btn-primary" onclick="showPage('add-contact')">Upload CSV</button>
     </div>
   </div>
 
@@ -250,49 +253,85 @@ tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--b
     <button class="btn" onclick="showPage('contacts')" style="margin-bottom:20px">← Back to Contacts</button>
     <div style="max-width:720px;">
       <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:600;margin-bottom:6px">Add Contacts</h2>
-      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:32px">Import contacts manually or sync from a connected platform.</p>
+      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:32px">Import contacts via CSV or add them manually.</p>
+
+      <!-- CSV Upload -->
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>CSV Import</h3></div>
+        <div class="panel-body">
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Upload a .csv file with columns: First Name, Last Name, Company, Title, Email, Industry</p>
+          <div id="csv-dropzone" style="border:2px dashed var(--border);border-radius:var(--radius);padding:40px 20px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--bg-tertiary)"
+               ondragover="event.preventDefault();this.style.borderColor='var(--accent)';this.style.background='var(--accent-dim)'"
+               ondragleave="this.style.borderColor='var(--border)';this.style.background='var(--bg-tertiary)'"
+               ondrop="event.preventDefault();this.style.borderColor='var(--border)';this.style.background='var(--bg-tertiary)';handleCsvFile(event.dataTransfer.files[0])"
+               onclick="document.getElementById('csv-file-input').click()">
+            <input type="file" id="csv-file-input" accept=".csv" style="display:none" onchange="handleCsvFile(this.files[0])">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <div style="font-size:14px;font-weight:500;color:var(--text-secondary)">Drag & drop a .csv file here</div>
+            <div style="font-size:12px;color:var(--text-tertiary);margin-top:6px">or click to browse</div>
+          </div>
+          <div id="csv-preview" style="display:none;margin-top:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <div style="font-size:13px;font-weight:500;color:var(--text-primary)"><span id="csv-count">0</span> contacts parsed</div>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-sm" onclick="clearCsvPreview()">Clear</button>
+                <button class="btn btn-primary btn-sm" onclick="importCsvContacts()">Import All</button>
+              </div>
+            </div>
+            <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm)">
+              <table id="csv-preview-table"><thead><tr><th>First Name</th><th>Last Name</th><th>Company</th><th>Title</th><th>Email</th><th>Industry</th></tr></thead><tbody></tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:12px;margin:24px 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px">Or add manually</span><div style="flex:1;height:1px;background:var(--border)"></div></div></div>
 
       <!-- Manual Entry -->
       <div class="panel" style="margin-bottom:16px">
         <div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></span>Manual Entry</h3></div>
         <div class="panel-body">
-          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Add a single contact with their details. AI will enrich their profile automatically.</p>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Add a single contact with their details.</p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
             <div>
               <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">First Name</label>
-              <input type="text" placeholder="e.g. Sarah" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+              <input type="text" id="manual-fname" placeholder="e.g. Sarah" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
             </div>
             <div>
               <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Last Name</label>
-              <input type="text" placeholder="e.g. Chen" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+              <input type="text" id="manual-lname" placeholder="e.g. Chen" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
             </div>
             <div>
               <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Company</label>
-              <input type="text" placeholder="e.g. BlackRock" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+              <input type="text" id="manual-company" placeholder="e.g. BlackRock" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
             </div>
             <div>
               <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Title</label>
-              <input type="text" placeholder="e.g. Managing Director" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+              <input type="text" id="manual-title" placeholder="e.g. Managing Director" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
             </div>
-            <div style="grid-column:span 2">
+            <div>
               <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Email</label>
-              <input type="email" placeholder="e.g. sarah.chen@blackrock.com" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+              <input type="email" id="manual-email" placeholder="e.g. sarah.chen@blackrock.com" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Industry</label>
+              <input type="text" id="manual-industry" placeholder="e.g. Asset Management" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
             </div>
             <div>
               <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Source</label>
-              <select style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;cursor:pointer;">
+              <select id="manual-source" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;cursor:pointer;">
                 <option>Select source...</option>
                 <option>Conference</option>
-                <option>LinkedIn</option>
                 <option>Referral</option>
                 <option>Cold Outreach</option>
-                <option>iMessage</option>
+                <option>CSV Import</option>
                 <option>Other</option>
               </select>
             </div>
             <div>
               <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Status</label>
-              <select style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;cursor:pointer;">
+              <select id="manual-status" style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;cursor:pointer;">
                 <option>Cold</option>
                 <option>Nurture</option>
                 <option>Warm</option>
@@ -300,68 +339,7 @@ tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--b
               </select>
             </div>
           </div>
-          <button class="btn btn-primary" onclick="showToast('Contact added successfully')" style="width:100%;justify-content:center;padding:12px">Add Contact</button>
-        </div>
-      </div>
-
-      <!-- Sync Import -->
-      <div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:12px;margin:24px 0"><div style="flex:1;height:1px;background:var(--border)"></div><span style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:1px">Or sync from a platform</span><div style="flex:1;height:1px;background:var(--border)"></div></div></div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <!-- LinkedIn -->
-        <div class="panel" style="cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Syncing LinkedIn connections...')">
-          <div class="panel-body" style="display:flex;align-items:center;gap:14px;padding:20px">
-            <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(10,102,194,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0a66c2" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-            </div>
-            <div>
-              <div style="font-size:14px;font-weight:600">LinkedIn</div>
-              <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Import connections and sync activity</div>
-              <div style="font-size:11px;color:var(--green);margin-top:4px;font-weight:500">Connected</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Contacts / Phone -->
-        <div class="panel" style="cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Importing from Contacts...')">
-          <div class="panel-body" style="display:flex;align-items:center;gap:14px;padding:20px">
-            <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(52,211,153,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div>
-              <div style="font-size:14px;font-weight:600">Contacts</div>
-              <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Import from phone or Google contacts</div>
-              <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;font-weight:500">Ready to connect</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- WhatsApp -->
-        <div class="panel" style="cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Connecting WhatsApp...')">
-          <div class="panel-body" style="display:flex;align-items:center;gap:14px;padding:20px">
-            <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(37,211,102,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#25d366" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            </div>
-            <div>
-              <div style="font-size:14px;font-weight:600">WhatsApp</div>
-              <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Sync contacts and conversation signals</div>
-              <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;font-weight:500">Ready to connect</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Instagram -->
-        <div class="panel" style="cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'" onclick="showToast('Connecting Instagram...')">
-          <div class="panel-body" style="display:flex;align-items:center;gap:14px;padding:20px">
-            <div style="width:44px;height:44px;border-radius:var(--radius-sm);background:rgba(225,48,108,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e1306c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-            </div>
-            <div>
-              <div style="font-size:14px;font-weight:600">Instagram</div>
-              <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px">Import followers and DM contacts</div>
-              <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;font-weight:500">Ready to connect</div>
-            </div>
-          </div>
+          <button class="btn btn-primary" onclick="addManualContact()" style="width:100%;justify-content:center;padding:12px">Add Contact</button>
         </div>
       </div>
     </div>
@@ -402,16 +380,9 @@ tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--b
   <!-- CONTACTS -->
   <div class="page" id="page-contacts">
     <div class="table-container">
-      <div class="table-header"><h3>All Contacts</h3><div class="table-filters"><button class="filter-chip active">All</button><button class="filter-chip">Hot</button><button class="filter-chip">Warm</button><button class="filter-chip">Nurture</button><button class="filter-chip">Cold</button><button class="filter-chip">At Risk</button></div></div>
+      <div class="table-header"><h3>All Contacts</h3><div class="table-filters"><button class="filter-chip active">All</button><button class="filter-chip">Hot</button><button class="filter-chip">Warm</button><button class="filter-chip">Nurture</button><button class="filter-chip">Cold</button></div></div>
       <table><thead><tr><th>Contact</th><th>Status</th><th>Engagement</th><th>Last Touch</th><th>Source</th><th>Score</th></tr></thead>
-      <tbody>
-        <tr onclick="showPage('contact-detail')"><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff">SC</div><div><div class="contact-name">Sarah Chen</div><div class="contact-company">Managing Director · BlackRock</div></div></div></td><td><span class="tag tag-hot">Hot</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:92%;background:var(--green)"></div></div></td><td><span class="last-touch">3 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">Conference</td><td><div class="score-circle" style="background:var(--green-dim);color:var(--green)">94</div></td></tr>
-        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff">DP</div><div><div class="contact-name">David Park</div><div class="contact-company">Head of AI Strategy · Citadel</div></div></div></td><td><span class="tag tag-warm">Warm</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:68%;background:var(--amber)"></div></div></td><td><span class="last-touch">12 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">LinkedIn</td><td><div class="score-circle" style="background:var(--amber-dim);color:var(--amber)">72</div></td></tr>
-        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#dc2626,#f87171);color:#fff">RM</div><div><div class="contact-name">Rachel Morrison</div><div class="contact-company">Partner, AI Practice · Deloitte</div></div></div></td><td><span class="tag tag-nurture">Nurture</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:45%;background:var(--accent)"></div></div></td><td><span class="last-touch overdue">21 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">Referral</td><td><div class="score-circle" style="background:var(--accent-dim);color:var(--accent-light)">58</div></td></tr>
-        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#0d9488,#2dd4bf);color:#fff">JL</div><div><div class="contact-name">James Liu</div><div class="contact-company">VP Operations · Fidelity Investments</div></div></div></td><td><span class="tag tag-cold">Cold</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:18%;background:var(--text-tertiary)"></div></div></td><td><span class="last-touch overdue">45 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">SIFMA</td><td><div class="score-circle" style="background:var(--red-dim);color:var(--red)">24</div></td></tr>
-        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff">AK</div><div><div class="contact-name">Anika Kapoor</div><div class="contact-company">CTO · Broadridge Financial</div></div></div></td><td><span class="tag tag-warm">Warm</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:75%;background:var(--amber)"></div></div></td><td><span class="last-touch">8 days ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">Cold outreach</td><td><div class="score-circle" style="background:var(--amber-dim);color:var(--amber)">78</div></td></tr>
-        <tr><td><div class="contact-cell"><div class="contact-avatar" style="background:linear-gradient(135deg,#4338ca,#818cf8);color:#fff">MT</div><div><div class="contact-name">Marcus Thompson</div><div class="contact-company">Head of Digital · State Street</div></div></div></td><td><span class="tag tag-hot">Hot</span></td><td><div class="engagement-bar"><div class="engagement-fill" style="width:88%;background:var(--green)"></div></div></td><td><span class="last-touch">1 day ago</span></td><td style="font-size:12px;color:var(--text-tertiary)">Referral</td><td><div class="score-circle" style="background:var(--green-dim);color:var(--green)">91</div></td></tr>
-      </tbody></table>
+      <tbody id="contacts-tbody"></tbody></table>
     </div>
   </div>
 
@@ -421,7 +392,11 @@ tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--b
     <div class="contact-detail-header">
       <div class="detail-avatar">SC</div>
       <div><div class="detail-info"><h2>Sarah Chen</h2><div class="detail-meta"><span>Managing Director · BlackRock</span><span style="color:var(--text-tertiary)">·</span><span>New York, NY</span><span style="color:var(--text-tertiary)">·</span><span style="color:var(--green)">Active</span></div></div><div class="detail-tags"><span class="tag tag-hot">Hot Lead</span><span class="tag" style="background:var(--accent-dim);color:var(--accent-light)">AI Governance</span><span class="tag" style="background:var(--purple-dim);color:var(--purple)">Fund Ops</span></div></div>
-      <div style="margin-left:auto;display:flex;gap:8px"><button class="btn">Email</button><button class="btn">iMessage</button><button class="btn btn-primary">AI Draft</button></div>
+      <div style="margin-left:auto;display:flex;gap:8px"><button class="btn" onclick="callClaudeAI('research')">Research</button><button class="btn" onclick="callClaudeAI('match')">Match Content</button><button class="btn btn-primary" onclick="callClaudeAI('draft')">AI Draft</button></div>
+    </div>
+    <div id="ai-result-panel" class="panel" style="display:none;margin-bottom:16px">
+      <div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span id="ai-result-title">AI Result</span></h3><button class="btn btn-sm" onclick="document.getElementById('ai-result-panel').style.display='none'">Close</button></div>
+      <div class="panel-body"><div id="ai-result-content" style="font-size:13px;line-height:1.7;color:var(--text-secondary);white-space:pre-wrap"></div></div>
     </div>
     <div class="detail-grid">
       <div>
@@ -483,11 +458,15 @@ tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--b
   <div class="page" id="page-content">
     <div class="panel">
       <div class="panel-header"><h3><span class="ph-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>AI-Curated Content Feed</h3><div class="table-filters"><button class="filter-chip active">All</button><button class="filter-chip">Articles</button><button class="filter-chip">Podcasts</button><button class="filter-chip">Events</button><button class="filter-chip">Your Content</button></div></div>
-      <div class="panel-body">
-        <div class="content-item-lg"><div class="ct-icon-lg" style="background:var(--red-dim)"><svg viewBox="0 0 24 24" stroke="var(--red)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div style="flex:1"><div class="content-title" style="font-size:14px">FCA releases final guidance on AI model risk in financial services</div><div class="content-source" style="margin-top:4px">Financial Times · 2 hours ago</div><div class="content-match" style="margin-top:6px">Matches 14 contacts: Sarah Chen, David Park, Rachel Morrison, +11 more</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-sm" onclick="showToast('Sharing with 14 matched contacts...')">Share with matches</button><button class="btn btn-sm">Copy link</button><button class="btn btn-sm">Draft personalized intros</button></div></div></div>
-        <div class="content-item-lg"><div class="ct-icon-lg" style="background:var(--purple-dim)"><svg viewBox="0 0 24 24" stroke="var(--purple)"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div><div style="flex:1"><div class="content-title" style="font-size:14px">The AI-Powered Back Office: How Fund Admins Are Actually Using LLMs</div><div class="content-source" style="margin-top:4px">Capital Allocators Podcast · Mar 25</div><div class="content-match" style="margin-top:6px">Matches 8 contacts in fund operations: James Liu, Anika Kapoor, +6 more</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-sm" onclick="showToast('Sharing with 8 matched contacts...')">Share with matches</button><button class="btn btn-sm">Copy link</button><button class="btn btn-sm">Draft personalized intros</button></div></div></div>
-        <div class="content-item-lg"><div class="ct-icon-lg" style="background:var(--green-dim)"><svg viewBox="0 0 24 24" stroke="var(--green)"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div style="flex:1"><div class="content-title" style="font-size:14px">McKinsey: GenAI in Asset Management — 2026 Adoption Benchmarks</div><div class="content-source" style="margin-top:4px">McKinsey & Company · Mar 24</div><div class="content-match" style="margin-top:6px">Matches 22 contacts · Highest relevance score this week</div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-sm" onclick="showToast('Sharing with 22 matched contacts...')">Share with matches</button><button class="btn btn-sm">Copy link</button><button class="btn btn-sm">Draft personalized intros</button></div></div></div>
+      <div class="panel-body" id="content-feed-body"></div>
+    </div>
+    <!-- Expanded content detail area -->
+    <div id="content-detail-panel" class="panel" style="display:none;margin-top:16px">
+      <div class="panel-header">
+        <h3><span class="ph-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span id="content-detail-title">Result</span></h3>
+        <button class="btn btn-sm" onclick="document.getElementById('content-detail-panel').style.display='none'">Close</button>
       </div>
+      <div class="panel-body"><div id="content-detail-body" style="font-size:13px;line-height:1.7;color:var(--text-secondary);white-space:pre-wrap"></div></div>
     </div>
   </div>
 
@@ -517,12 +496,750 @@ tr { transition:background 0.1s; cursor:pointer; } tr:hover { background:var(--b
     </div>
   </div>
 
+  <!-- SOURCE SETTINGS -->
+  <div class="page" id="page-source-settings">
+    <button class="btn" onclick="showPage('dashboard')" style="margin-bottom:20px">← Back to Dashboard</button>
+    <div style="max-width:720px;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:600;margin-bottom:6px" id="source-settings-title">Source Settings</h2>
+      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:32px" id="source-settings-subtitle">Configure your connected data source.</p>
+      <div id="source-settings-content"></div>
+    </div>
+  </div>
+
 </main>
 
+<!-- API Settings Modal -->
+<div id="api-settings-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;width:480px;max-width:90vw">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:600">API Settings</h3>
+      <button class="btn btn-sm" onclick="closeApiSettings()">Close</button>
+    </div>
+    <div>
+      <label style="font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px">Claude API Key</label>
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." style="width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'JetBrains Mono',monospace;outline:none;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      <p style="font-size:11px;color:var(--text-tertiary);margin-top:8px">Your key is stored locally in your browser and never sent to any server other than Anthropic's API.</p>
+      <button class="btn btn-primary" onclick="saveApiKey()" style="width:100%;justify-content:center;padding:12px;margin-top:16px">Save API Key</button>
+    </div>
+  </div>
+</div>
+
 <script>
-function showPage(id){const m={'dashboard':{title:'Dashboard',sub:'Friday, March 27, 2026 · 12 actions pending'},'contacts':{title:'Contacts',sub:'247 people in your network'},'contact-detail':{title:'Contact Detail',sub:'Sarah Chen · BlackRock'},'pipeline':{title:'Pipeline',sub:'Relationship funnel overview'},'content':{title:'Content Feed',sub:'AI-curated content matched to your network'},'insights':{title:'AI Insights',sub:'Network intelligence and recommendations'},'add-contact':{title:'Add Contact',sub:'Import or sync new contacts'}};document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));const t=document.getElementById('page-'+id);if(t)t.classList.add('active');const i=m[id]||{title:id,sub:''};document.getElementById('page-title').textContent=i.title;document.getElementById('page-subtitle').textContent=i.sub;document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const ni=document.querySelectorAll('.nav-item'),nm={'dashboard':0,'contacts':1,'pipeline':2,'content':3,'insights':4};if(nm[id]!==undefined)ni[nm[id]].classList.add('active');if(id==='contact-detail')ni[1].classList.add('active');}
-function showToast(msg){const e=document.querySelector('.toast');if(e)e.remove();const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3500);}
-document.querySelectorAll('.filter-chip').forEach(c=>{c.addEventListener('click',function(){this.parentElement.querySelectorAll('.filter-chip').forEach(x=>x.classList.remove('active'));this.classList.add('active');});});
+// ---- Sanitize helper ----
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ---- Default / seed contacts ----
+const DEFAULT_CONTACTS = [
+  {firstName:'Sarah',lastName:'Chen',company:'BlackRock',title:'Managing Director',email:'sarah.chen@blackrock.com',industry:'Asset Management',status:'Hot',source:'Conference',score:94,engagement:92,lastTouch:'3 days ago',gradient:'#1e40af,#3b82f6'},
+  {firstName:'David',lastName:'Park',company:'Citadel',title:'Head of AI Strategy',email:'david.park@citadel.com',industry:'Asset Management',status:'Warm',source:'LinkedIn',score:72,engagement:68,lastTouch:'12 days ago',gradient:'#7c3aed,#a78bfa'},
+  {firstName:'Rachel',lastName:'Morrison',company:'Deloitte',title:'Partner, AI Practice',email:'rachel.morrison@deloitte.com',industry:'Consulting',status:'Nurture',source:'Referral',score:58,engagement:45,lastTouch:'21 days ago',gradient:'#dc2626,#f87171',overdue:true},
+  {firstName:'James',lastName:'Liu',company:'Fidelity Investments',title:'VP Operations',email:'james.liu@fidelity.com',industry:'Asset Management',status:'Cold',source:'SIFMA',score:24,engagement:18,lastTouch:'45 days ago',gradient:'#0d9488,#2dd4bf',overdue:true},
+  {firstName:'Anika',lastName:'Kapoor',company:'Broadridge Financial',title:'CTO',email:'anika.kapoor@broadridge.com',industry:'Service Providers',status:'Warm',source:'Cold outreach',score:78,engagement:75,lastTouch:'8 days ago',gradient:'#b45309,#f59e0b'},
+  {firstName:'Marcus',lastName:'Thompson',company:'State Street',title:'Head of Digital',email:'marcus.thompson@statestreet.com',industry:'Asset Management',status:'Hot',source:'Referral',score:91,engagement:88,lastTouch:'1 day ago',gradient:'#4338ca,#818cf8'}
+];
+
+function getContacts() {
+  let stored = localStorage.getItem('beaconap_contacts');
+  if (!stored) {
+    localStorage.setItem('beaconap_contacts', JSON.stringify(DEFAULT_CONTACTS));
+    return DEFAULT_CONTACTS;
+  }
+  return JSON.parse(stored);
+}
+
+function saveContacts(contacts) {
+  localStorage.setItem('beaconap_contacts', JSON.stringify(contacts));
+}
+
+// ---- Render contacts table ----
+const GRADIENTS = ['#1e40af,#3b82f6','#7c3aed,#a78bfa','#dc2626,#f87171','#0d9488,#2dd4bf','#b45309,#f59e0b','#4338ca,#818cf8','#059669,#34d399','#9333ea,#c084fc','#d97706,#fbbf24','#0891b2,#22d3ee'];
+
+function randomGradient() { return GRADIENTS[Math.floor(Math.random()*GRADIENTS.length)]; }
+
+function statusConfig(s) {
+  const m = {
+    'Hot': {cls:'tag-hot',engColor:'var(--green)',scoreColor:'var(--green)',scoreBg:'var(--green-dim)'},
+    'Warm': {cls:'tag-warm',engColor:'var(--amber)',scoreColor:'var(--amber)',scoreBg:'var(--amber-dim)'},
+    'Nurture': {cls:'tag-nurture',engColor:'var(--accent)',scoreColor:'var(--accent-light)',scoreBg:'var(--accent-dim)'},
+    'Cold': {cls:'tag-cold',engColor:'var(--text-tertiary)',scoreColor:'var(--red)',scoreBg:'var(--red-dim)'}
+  };
+  return m[s] || m['Cold'];
+}
+
+function renderContacts(filter) {
+  const contacts = getContacts();
+  const tbody = document.getElementById('contacts-tbody');
+  tbody.innerHTML = '';
+  const filtered = (!filter || filter === 'All') ? contacts : contacts.filter(c => c.status === filter);
+  filtered.forEach(function(c) {
+    const initials = esc((c.firstName[0]||'')+(c.lastName[0]||''));
+    const grad = c.gradient || randomGradient();
+    const sc = statusConfig(c.status);
+    const eng = c.engagement || Math.floor(Math.random()*60+20);
+    const score = c.score || Math.floor(Math.random()*60+20);
+    const touch = esc(c.lastTouch || 'N/A');
+    const overdue = c.overdue || false;
+    const tr = document.createElement('tr');
+    tr.addEventListener('click', function() { showContactDetail(c); });
+
+    // Build cells using DOM methods
+    const td1 = document.createElement('td');
+    const cell = document.createElement('div'); cell.className='contact-cell';
+    const avatar = document.createElement('div'); avatar.className='contact-avatar'; avatar.style.cssText='background:linear-gradient(135deg,'+grad+');color:#fff'; avatar.textContent = (c.firstName[0]||'')+(c.lastName[0]||'');
+    const info = document.createElement('div');
+    const nameDiv = document.createElement('div'); nameDiv.className='contact-name'; nameDiv.textContent = c.firstName+' '+c.lastName;
+    const compDiv = document.createElement('div'); compDiv.className='contact-company'; compDiv.textContent = c.title+' · '+c.company;
+    info.appendChild(nameDiv); info.appendChild(compDiv);
+    cell.appendChild(avatar); cell.appendChild(info); td1.appendChild(cell);
+
+    const td2 = document.createElement('td');
+    const tag = document.createElement('span'); tag.className='tag '+sc.cls; tag.textContent = c.status; td2.appendChild(tag);
+
+    const td3 = document.createElement('td');
+    const bar = document.createElement('div'); bar.className='engagement-bar';
+    const fill = document.createElement('div'); fill.className='engagement-fill'; fill.style.cssText='width:'+eng+'%;background:'+sc.engColor;
+    bar.appendChild(fill); td3.appendChild(bar);
+
+    const td4 = document.createElement('td');
+    const touchSpan = document.createElement('span'); touchSpan.className='last-touch'+(overdue?' overdue':''); touchSpan.textContent = c.lastTouch||'N/A'; td4.appendChild(touchSpan);
+
+    const td5 = document.createElement('td'); td5.style.cssText='font-size:12px;color:var(--text-tertiary)'; td5.textContent = c.source||'CSV Import';
+
+    const td6 = document.createElement('td');
+    const scoreDiv = document.createElement('div'); scoreDiv.className='score-circle'; scoreDiv.style.cssText='background:'+sc.scoreBg+';color:'+sc.scoreColor; scoreDiv.textContent = score; td6.appendChild(scoreDiv);
+
+    tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tr.appendChild(td4); tr.appendChild(td5); tr.appendChild(td6);
+    tbody.appendChild(tr);
+  });
+  // Update count in sidebar
+  const countEl = document.querySelector('.nav-count');
+  if (countEl) countEl.textContent = contacts.length;
+}
+
+// ---- Contact Detail (dynamic for clicked contact) ----
+let currentDetailContact = null;
+
+function showContactDetail(contact) {
+  currentDetailContact = contact;
+  const initials = (contact.firstName[0]||'')+(contact.lastName[0]||'');
+  document.querySelector('.detail-avatar').textContent = initials;
+  document.querySelector('.detail-info h2').textContent = contact.firstName + ' ' + contact.lastName;
+  document.querySelector('.detail-meta span').textContent = contact.title + ' · ' + contact.company;
+  document.getElementById('ai-result-panel').style.display = 'none';
+  showPage('contact-detail');
+}
+
+// ---- CSV Parsing ----
+let parsedCsvRows = [];
+
+function handleCsvFile(file) {
+  if (!file || !file.name.endsWith('.csv')) {
+    showToast('Please upload a .csv file');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    const lines = text.split(/\r?\n/).filter(function(l) { return l.trim(); });
+    if (lines.length < 2) { showToast('CSV must have a header row and at least one data row'); return; }
+    const headers = lines[0].split(',').map(function(h) { return h.trim().toLowerCase(); });
+    const colMap = {};
+    const mapping = {'first name':'firstName','firstname':'firstName','last name':'lastName','lastname':'lastName','company':'company','title':'title','email':'email','industry':'industry'};
+    headers.forEach(function(h, i) { if (mapping[h]) colMap[mapping[h]] = i; });
+    parsedCsvRows = [];
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(',').map(function(c) { return c.trim(); });
+      if (cols.length < 2) continue;
+      parsedCsvRows.push({
+        firstName: cols[colMap.firstName] || '',
+        lastName: cols[colMap.lastName] || '',
+        company: cols[colMap.company] || '',
+        title: cols[colMap.title] || '',
+        email: cols[colMap.email] || '',
+        industry: cols[colMap.industry] || ''
+      });
+    }
+    renderCsvPreview();
+  };
+  reader.readAsText(file);
+}
+
+function renderCsvPreview() {
+  document.getElementById('csv-preview').style.display = 'block';
+  document.getElementById('csv-count').textContent = parsedCsvRows.length;
+  const tbody = document.querySelector('#csv-preview-table tbody');
+  tbody.innerHTML = '';
+  parsedCsvRows.forEach(function(r) {
+    const tr = document.createElement('tr');
+    ['firstName','lastName','company','title','email','industry'].forEach(function(key) {
+      const td = document.createElement('td');
+      td.textContent = r[key];
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function clearCsvPreview() {
+  parsedCsvRows = [];
+  document.getElementById('csv-preview').style.display = 'none';
+  document.getElementById('csv-file-input').value = '';
+}
+
+function importCsvContacts() {
+  if (!parsedCsvRows.length) return;
+  const contacts = getContacts();
+  parsedCsvRows.forEach(function(r) {
+    contacts.push({
+      firstName: r.firstName,
+      lastName: r.lastName,
+      company: r.company,
+      title: r.title,
+      email: r.email,
+      industry: r.industry,
+      status: 'Cold',
+      source: 'CSV Import',
+      score: Math.floor(Math.random()*30+10),
+      engagement: Math.floor(Math.random()*30+10),
+      lastTouch: 'Just imported',
+      gradient: randomGradient()
+    });
+  });
+  saveContacts(contacts);
+  showToast(parsedCsvRows.length + ' contacts imported successfully');
+  clearCsvPreview();
+  renderContacts();
+}
+
+// ---- Manual add ----
+function addManualContact() {
+  const fn = document.getElementById('manual-fname').value.trim();
+  const ln = document.getElementById('manual-lname').value.trim();
+  if (!fn || !ln) { showToast('First and last name are required'); return; }
+  const contacts = getContacts();
+  contacts.push({
+    firstName: fn,
+    lastName: ln,
+    company: document.getElementById('manual-company').value.trim(),
+    title: document.getElementById('manual-title').value.trim(),
+    email: document.getElementById('manual-email').value.trim(),
+    industry: document.getElementById('manual-industry').value.trim(),
+    status: document.getElementById('manual-status').value,
+    source: document.getElementById('manual-source').value === 'Select source...' ? 'Manual' : document.getElementById('manual-source').value,
+    score: Math.floor(Math.random()*30+20),
+    engagement: Math.floor(Math.random()*30+20),
+    lastTouch: 'Just added',
+    gradient: randomGradient()
+  });
+  saveContacts(contacts);
+  showToast('Contact added: ' + fn + ' ' + ln);
+  ['manual-fname','manual-lname','manual-company','manual-title','manual-email','manual-industry'].forEach(function(id) { document.getElementById(id).value = ''; });
+  renderContacts();
+}
+
+// ---- API Settings Modal ----
+function openApiSettings() {
+  const modal = document.getElementById('api-settings-modal');
+  modal.style.display = 'flex';
+  const saved = localStorage.getItem('beaconap_claude_api_key');
+  if (saved) document.getElementById('api-key-input').value = saved;
+}
+
+function closeApiSettings() {
+  document.getElementById('api-settings-modal').style.display = 'none';
+}
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key) { showToast('Please enter an API key'); return; }
+  localStorage.setItem('beaconap_claude_api_key', key);
+  showToast('API key saved');
+  closeApiSettings();
+}
+
+document.getElementById('api-settings-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeApiSettings();
+});
+
+// ---- Claude AI Calls ----
+async function callClaudeAI(mode) {
+  const apiKey = localStorage.getItem('beaconap_claude_api_key');
+  if (!apiKey) { openApiSettings(); showToast('Please set your Claude API key first'); return; }
+  const c = currentDetailContact || {firstName:'Sarah',lastName:'Chen',company:'BlackRock',title:'Managing Director',industry:'Asset Management',email:''};
+  const name = c.firstName + ' ' + c.lastName;
+  let prompt = '';
+  let title = '';
+  if (mode === 'research') {
+    title = 'Company & Industry Research';
+    prompt = 'You are a research assistant for Michael Sands, founder of BeaconAP, an AI advisory firm for capital markets. Research the following contact and provide a concise briefing:\n\nName: '+name+'\nTitle: '+c.title+'\nCompany: '+c.company+'\nIndustry: '+c.industry+'\n\nProvide:\n1. Brief company overview and recent news\n2. Industry trends relevant to this contact\n3. Potential conversation topics for Michael\n4. Any AI/technology initiatives at their company\n\nKeep it concise and actionable.';
+  } else if (mode === 'match') {
+    title = 'Matched Content Recommendations';
+    prompt = 'You are a content matching assistant for Michael Sands, founder of BeaconAP, an AI advisory firm for capital markets. Find relevant content to share with this contact:\n\nName: '+name+'\nTitle: '+c.title+'\nCompany: '+c.company+'\nIndustry: '+c.industry+'\n\nSuggest 3-5 specific types of articles, reports, or content pieces that would be valuable to share with this person. For each, explain:\n- Topic and why it is relevant to them\n- How Michael could frame sharing it\n- The relationship-building angle\n\nFocus on AI in capital markets, regulatory developments, and industry trends.';
+  } else if (mode === 'draft') {
+    title = 'Personalized Outreach Draft';
+    prompt = 'You are a ghostwriter for Michael Sands, founder of BeaconAP, an AI advisory firm for capital markets. Draft a personalized outreach email to this contact:\n\nName: '+name+'\nTitle: '+c.title+'\nCompany: '+c.company+'\nIndustry: '+c.industry+'\n\nWrite a brief, warm, professional email from Michael that:\n- References something relevant to their role/company\n- Offers genuine value (insight, introduction, or resource)\n- Has a clear but soft call to action\n- Sounds human, not templated\n- Is under 150 words\n\nSign off as Michael.';
+  }
+
+  const panel = document.getElementById('ai-result-panel');
+  const content = document.getElementById('ai-result-content');
+  document.getElementById('ai-result-title').textContent = title;
+  content.textContent = 'Thinking...';
+  panel.style.display = 'block';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1024,
+        messages: [{role: 'user', content: prompt}]
+      })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(function() { return {}; });
+      throw new Error(err.error?.message || 'API request failed (' + resp.status + ')');
+    }
+    const data = await resp.json();
+    content.textContent = data.content[0].text;
+  } catch (err) {
+    content.textContent = 'Error: ' + err.message;
+  }
+}
+
+// ---- Content Feed ----
+const CONTENT_FEED = [
+  {
+    id: 'fca-guidance',
+    title: 'FCA releases final guidance on AI model risk in financial services',
+    source: 'Financial Times',
+    date: '2 hours ago',
+    type: 'Articles',
+    iconBg: 'var(--red-dim)',
+    iconStroke: 'var(--red)',
+    iconPath: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+    matchText: 'Matches 14 contacts: Sarah Chen, David Park, Rachel Morrison, +11 more',
+    matchCount: 14,
+    matchedContacts: ['Sarah Chen','David Park','Rachel Morrison'],
+    summary: 'The FCA has published its final guidance on AI model risk management for financial services firms. Key points include requirements for model validation, governance frameworks for LLM deployment, and new expectations around explainability in automated decision-making. This is directly relevant to firms evaluating AI adoption in compliance-sensitive areas.'
+  },
+  {
+    id: 'ai-back-office',
+    title: 'The AI-Powered Back Office: How Fund Admins Are Actually Using LLMs',
+    source: 'Capital Allocators Podcast',
+    date: 'Mar 25',
+    type: 'Podcasts',
+    iconBg: 'var(--purple-dim)',
+    iconStroke: 'var(--purple)',
+    iconPath: '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',
+    matchText: 'Matches 8 contacts in fund operations: James Liu, Anika Kapoor, +6 more',
+    matchCount: 8,
+    matchedContacts: ['James Liu','Anika Kapoor'],
+    summary: 'This episode explores real-world LLM deployments in fund administration — from NAV reconciliation to investor reporting automation. Features interviews with ops leaders at mid-size fund admins who have moved past proof-of-concept into production workflows.'
+  },
+  {
+    id: 'mckinsey-genai',
+    title: 'McKinsey: GenAI in Asset Management — 2026 Adoption Benchmarks',
+    source: 'McKinsey & Company',
+    date: 'Mar 24',
+    type: 'Articles',
+    iconBg: 'var(--green-dim)',
+    iconStroke: 'var(--green)',
+    iconPath: '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+    matchText: 'Matches 22 contacts · Highest relevance score this week',
+    matchCount: 22,
+    matchedContacts: ['Sarah Chen','David Park','Rachel Morrison','Anika Kapoor','Marcus Thompson'],
+    summary: 'McKinsey\'s latest report benchmarks GenAI adoption across 120 asset managers globally. Key findings: 43% have production LLM use cases (up from 12% in 2024), investment research and client reporting lead adoption, and firms cite talent and governance as top barriers.'
+  }
+];
+
+function renderContentFeed(filter) {
+  var body = document.getElementById('content-feed-body');
+  body.innerHTML = '';
+  var items = (!filter || filter === 'All') ? CONTENT_FEED : CONTENT_FEED.filter(function(c) { return c.type === filter; });
+
+  items.forEach(function(item) {
+    var row = document.createElement('div');
+    row.className = 'content-item-lg';
+    row.style.cursor = 'pointer';
+
+    // Icon
+    var icon = document.createElement('div');
+    icon.className = 'ct-icon-lg';
+    icon.style.background = item.iconBg;
+    icon.innerHTML = '<svg viewBox="0 0 24 24" stroke="'+esc(item.iconStroke)+'" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+item.iconPath+'</svg>';
+
+    // Body
+    var content = document.createElement('div');
+    content.style.flex = '1';
+
+    var title = document.createElement('div');
+    title.className = 'content-title';
+    title.style.fontSize = '14px';
+    title.textContent = item.title;
+
+    var source = document.createElement('div');
+    source.className = 'content-source';
+    source.style.marginTop = '4px';
+    source.textContent = item.source + ' · ' + item.date;
+
+    var match = document.createElement('div');
+    match.className = 'content-match';
+    match.style.marginTop = '6px';
+    match.textContent = item.matchText;
+
+    // Summary (collapsed by default)
+    var summary = document.createElement('div');
+    summary.style.cssText = 'display:none;margin-top:12px;padding:12px 16px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;line-height:1.6;color:var(--text-secondary)';
+    summary.textContent = item.summary;
+    summary.id = 'summary-' + item.id;
+
+    // Buttons
+    var btns = document.createElement('div');
+    btns.style.cssText = 'display:flex;gap:6px;margin-top:10px;flex-wrap:wrap';
+
+    var readMoreBtn = document.createElement('button');
+    readMoreBtn.className = 'btn btn-sm';
+    readMoreBtn.textContent = 'Read Summary';
+    readMoreBtn.addEventListener('click', (function(summaryEl, btn) {
+      return function(e) {
+        e.stopPropagation();
+        if (summaryEl.style.display === 'none') {
+          summaryEl.style.display = 'block';
+          btn.textContent = 'Hide Summary';
+        } else {
+          summaryEl.style.display = 'none';
+          btn.textContent = 'Read Summary';
+        }
+      };
+    })(summary, readMoreBtn));
+
+    var shareBtn = document.createElement('button');
+    shareBtn.className = 'btn btn-sm';
+    shareBtn.textContent = 'Share with matches (' + item.matchCount + ')';
+    shareBtn.addEventListener('click', (function(it) {
+      return function(e) {
+        e.stopPropagation();
+        contentAction('share', it);
+      };
+    })(item));
+
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'btn btn-sm';
+    copyBtn.textContent = 'Copy link';
+    copyBtn.addEventListener('click', (function(it) {
+      return function(e) {
+        e.stopPropagation();
+        var text = it.title + ' — ' + it.source + ' (' + it.date + ')';
+        navigator.clipboard.writeText(text).then(function() {
+          showToast('Link copied to clipboard');
+        });
+      };
+    })(item));
+
+    var draftBtn = document.createElement('button');
+    draftBtn.className = 'btn btn-sm btn-primary';
+    draftBtn.textContent = 'Draft personalized intros';
+    draftBtn.addEventListener('click', (function(it) {
+      return function(e) {
+        e.stopPropagation();
+        contentAction('draft', it);
+      };
+    })(item));
+
+    btns.appendChild(readMoreBtn);
+    btns.appendChild(shareBtn);
+    btns.appendChild(copyBtn);
+    btns.appendChild(draftBtn);
+
+    content.appendChild(title);
+    content.appendChild(source);
+    content.appendChild(match);
+    content.appendChild(btns);
+    content.appendChild(summary);
+
+    row.appendChild(icon);
+    row.appendChild(content);
+    body.appendChild(row);
+  });
+}
+
+async function contentAction(mode, item) {
+  var apiKey = localStorage.getItem('beaconap_claude_api_key');
+  if (!apiKey) { openApiSettings(); showToast('Please set your Claude API key first'); return; }
+
+  var panel = document.getElementById('content-detail-panel');
+  var titleEl = document.getElementById('content-detail-title');
+  var bodyEl = document.getElementById('content-detail-body');
+
+  var contacts = item.matchedContacts.join(', ');
+  var prompt = '';
+
+  if (mode === 'share') {
+    titleEl.textContent = 'Share Plan: ' + item.title;
+    bodyEl.textContent = 'Generating share plan...';
+    panel.style.display = 'block';
+    prompt = 'You are a relationship intelligence assistant for Michael Sands, founder of BeaconAP, an AI advisory firm for capital markets.\n\nMichael wants to share this content with his matched contacts:\n\nContent: "' + item.title + '"\nSource: ' + item.source + '\nSummary: ' + item.summary + '\nMatched contacts: ' + contacts + ' (and ' + (item.matchCount - item.matchedContacts.length) + ' more)\n\nCreate a brief sharing plan:\n1. A short, warm intro message Michael can use when sharing this (2-3 sentences, not salesy)\n2. For each named contact, a one-line personalization note explaining why this is especially relevant to them\n3. Suggested timing and channel (email, LinkedIn DM, etc.)\n\nKeep it concise and actionable. Write from Michael\'s perspective.';
+  } else if (mode === 'draft') {
+    titleEl.textContent = 'Personalized Intros: ' + item.title;
+    bodyEl.textContent = 'Drafting personalized intros...';
+    panel.style.display = 'block';
+    prompt = 'You are a ghostwriter for Michael Sands, founder of BeaconAP, an AI advisory firm for capital markets.\n\nMichael wants to share this content with several contacts and needs a personalized intro message for each:\n\nContent: "' + item.title + '"\nSource: ' + item.source + '\nSummary: ' + item.summary + '\nContacts to write intros for: ' + contacts + '\n\nFor each contact, write a short personalized message (3-5 sentences) from Michael that:\n- References the content naturally\n- Connects it to something relevant to that person\'s role/company\n- Feels warm and human, not templated\n- Has a soft CTA (reply, quick call, thoughts?)\n\nSign each as Michael. Separate each message with a divider line.';
+  }
+
+  try {
+    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1500,
+        messages: [{role: 'user', content: prompt}]
+      })
+    });
+    if (!resp.ok) {
+      var err = await resp.json().catch(function() { return {}; });
+      throw new Error(err.error?.message || 'API request failed (' + resp.status + ')');
+    }
+    var data = await resp.json();
+    bodyEl.textContent = data.content[0].text;
+  } catch (err) {
+    bodyEl.textContent = 'Error: ' + err.message;
+  }
+}
+
+// Initialize content feed when page loads
+function initContentFeed() {
+  renderContentFeed();
+}
+
+// ---- Source Settings ----
+const SOURCE_CONFIG = {
+  csv: {
+    name: 'CSV Import',
+    status: 'Active',
+    statusColor: 'var(--green)',
+    description: 'Import contacts from CSV files. Supports columns: First Name, Last Name, Company, Title, Email, Industry.',
+    action: 'Go to CSV Upload',
+    actionFn: function() { showPage('add-contact'); },
+    settings: [
+      {label:'Default Status for Imports', type:'select', options:['Cold','Nurture','Warm','Hot'], key:'csv_default_status'},
+      {label:'Default Source Tag', type:'text', placeholder:'e.g. CSV Import', key:'csv_default_source'}
+    ]
+  },
+  gmail: {
+    name: 'Gmail',
+    status: 'Connected',
+    statusColor: 'var(--green)',
+    description: 'Syncs email activity to track touchpoints, detect engagement signals, and enrich contact timelines automatically.',
+    settings: [
+      {label:'Connected Account', type:'text', placeholder:'michael@beaconap.com', key:'gmail_account'},
+      {label:'Sync Frequency', type:'select', options:['Every 15 minutes','Every hour','Every 6 hours','Daily'], key:'gmail_sync_freq'},
+      {label:'Track Opens & Forwards', type:'select', options:['Enabled','Disabled'], key:'gmail_tracking'}
+    ]
+  },
+  granola: {
+    name: 'Granola',
+    status: 'Connected',
+    statusColor: 'var(--green)',
+    description: 'Captures meeting notes and conversation intelligence. Automatically extracts interests, action items, and relationship signals.',
+    settings: [
+      {label:'Workspace', type:'text', placeholder:'BeaconAP', key:'granola_workspace'},
+      {label:'Auto-extract Interests', type:'select', options:['Enabled','Disabled'], key:'granola_interests'},
+      {label:'Sync Meeting Notes to Timeline', type:'select', options:['Enabled','Disabled'], key:'granola_timeline'}
+    ]
+  },
+  apollo: {
+    name: 'Apollo.io',
+    status: 'Pending Setup',
+    statusColor: 'var(--amber)',
+    description: 'Enrich contact profiles with firmographic data, verified emails, and company signals. Requires an Apollo.io API key.',
+    settings: [
+      {label:'Apollo API Key', type:'password', placeholder:'Enter your Apollo.io API key', key:'apollo_api_key'},
+      {label:'Auto-enrich New Contacts', type:'select', options:['Enabled','Disabled'], key:'apollo_auto_enrich'},
+      {label:'Enrichment Fields', type:'select', options:['All fields','Email & Phone only','Company data only'], key:'apollo_fields'}
+    ]
+  }
+};
+
+function showSourceSettings(sourceId) {
+  const cfg = SOURCE_CONFIG[sourceId];
+  if (!cfg) return;
+  const container = document.getElementById('source-settings-content');
+  document.getElementById('source-settings-title').textContent = cfg.name + ' Settings';
+  document.getElementById('source-settings-subtitle').textContent = cfg.description;
+
+  // Build settings form with DOM methods
+  container.innerHTML = '';
+
+  // Status panel
+  const statusPanel = document.createElement('div');
+  statusPanel.className = 'panel';
+  statusPanel.style.marginBottom = '16px';
+  const statusHeader = document.createElement('div');
+  statusHeader.className = 'panel-header';
+  const statusH3 = document.createElement('h3');
+  statusH3.textContent = 'Connection Status';
+  statusHeader.appendChild(statusH3);
+  const statusBadge = document.createElement('span');
+  statusBadge.style.cssText = 'font-size:12px;font-weight:600;color:'+cfg.statusColor;
+  statusBadge.textContent = cfg.status;
+  statusHeader.appendChild(statusBadge);
+  statusPanel.appendChild(statusHeader);
+
+  const statusBody = document.createElement('div');
+  statusBody.className = 'panel-body';
+
+  // Settings fields
+  cfg.settings.forEach(function(s) {
+    const fieldWrap = document.createElement('div');
+    fieldWrap.style.marginBottom = '14px';
+    const label = document.createElement('label');
+    label.style.cssText = 'font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.6px;display:block;margin-bottom:6px';
+    label.textContent = s.label;
+    fieldWrap.appendChild(label);
+
+    var input;
+    if (s.type === 'select') {
+      input = document.createElement('select');
+      input.style.cssText = 'width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;font-family:DM Sans,sans-serif;outline:none;appearance:none;cursor:pointer;';
+      s.options.forEach(function(opt) {
+        var o = document.createElement('option');
+        o.textContent = opt;
+        input.appendChild(o);
+      });
+    } else {
+      input = document.createElement('input');
+      input.type = s.type || 'text';
+      input.placeholder = s.placeholder || '';
+      input.style.cssText = 'width:100%;padding:10px 14px;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;font-family:'+(s.type==='password'?'JetBrains Mono,monospace':'DM Sans,sans-serif')+';outline:none;';
+    }
+    // Load saved value
+    var saved = localStorage.getItem('beaconap_source_'+s.key);
+    if (saved) input.value = saved;
+    input.dataset.key = s.key;
+    fieldWrap.appendChild(input);
+    statusBody.appendChild(fieldWrap);
+  });
+
+  statusPanel.appendChild(statusBody);
+  container.appendChild(statusPanel);
+
+  // Action buttons
+  var btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;gap:8px';
+
+  var saveBtn = document.createElement('button');
+  saveBtn.className = 'btn btn-primary';
+  saveBtn.style.cssText = 'flex:1;justify-content:center;padding:12px';
+  saveBtn.textContent = 'Save Settings';
+  saveBtn.addEventListener('click', function() {
+    cfg.settings.forEach(function(s) {
+      var el = container.querySelector('[data-key="'+s.key+'"]');
+      if (el) localStorage.setItem('beaconap_source_'+s.key, el.value);
+    });
+    showToast(cfg.name + ' settings saved');
+  });
+  btnRow.appendChild(saveBtn);
+
+  if (cfg.action) {
+    var actionBtn = document.createElement('button');
+    actionBtn.className = 'btn';
+    actionBtn.style.cssText = 'flex:1;justify-content:center;padding:12px';
+    actionBtn.textContent = cfg.action;
+    actionBtn.addEventListener('click', cfg.actionFn);
+    btnRow.appendChild(actionBtn);
+  }
+
+  container.appendChild(btnRow);
+
+  // Highlight the correct source nav item
+  showPage('source-settings');
+  var navSections = document.querySelectorAll('.nav-section');
+  var srcNavItems = navSections[2].querySelectorAll('.nav-item');
+  var srcMap = {'csv':0,'gmail':1,'granola':2,'apollo':3};
+  if (srcMap[sourceId] !== undefined && srcNavItems[srcMap[sourceId]]) {
+    srcNavItems[srcMap[sourceId]].classList.add('active');
+  }
+}
+
+// ---- Navigation ----
+function showPage(id) {
+  const m = {
+    'dashboard': {title:'Dashboard', sub:'Friday, March 27, 2026 · 12 actions pending'},
+    'contacts': {title:'Contacts', sub: getContacts().length + ' people in your network'},
+    'contact-detail': {title:'Contact Detail', sub: currentDetailContact ? (currentDetailContact.firstName+' '+currentDetailContact.lastName+' · '+currentDetailContact.company) : 'Sarah Chen · BlackRock'},
+    'pipeline': {title:'Pipeline', sub:'Relationship funnel overview'},
+    'content': {title:'Content Feed', sub:'AI-curated content matched to your network'},
+    'insights': {title:'AI Insights', sub:'Network intelligence and recommendations'},
+    'add-contact': {title:'Add Contact', sub:'Import via CSV or add manually'},
+    'source-settings': {title:'Source Settings', sub:'Configure your connected data source'}
+  };
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  const t = document.getElementById('page-'+id);
+  if (t) t.classList.add('active');
+  const i = m[id] || {title:id, sub:''};
+  document.getElementById('page-title').textContent = i.title;
+  document.getElementById('page-subtitle').textContent = i.sub;
+  // Nav highlighting
+  const navSections = document.querySelectorAll('.nav-section');
+  navSections.forEach(function(s) { s.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); }); });
+  const allNavItems = navSections[0].querySelectorAll('.nav-item');
+  const intNavItems = navSections[1].querySelectorAll('.nav-item');
+  const srcNavItems = navSections[2].querySelectorAll('.nav-item');
+  const nm = {'dashboard':0,'contacts':1,'pipeline':2};
+  const im = {'content':0,'insights':1};
+  if (nm[id] !== undefined && allNavItems[nm[id]]) allNavItems[nm[id]].classList.add('active');
+  if (im[id] !== undefined && intNavItems[im[id]]) intNavItems[im[id]].classList.add('active');
+  if (id === 'contact-detail' && allNavItems[1]) allNavItems[1].classList.add('active');
+  if (id === 'add-contact' && allNavItems[1]) allNavItems[1].classList.add('active');
+  if (id === 'contacts') renderContacts();
+  if (id === 'content') { renderContentFeed(); document.getElementById('content-detail-panel').style.display='none'; }
+}
+
+function showToast(msg) {
+  const e = document.querySelector('.toast');
+  if (e) e.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function() { t.remove(); }, 3500);
+}
+
+// Filter chips
+document.querySelectorAll('.filter-chip').forEach(function(c) {
+  c.addEventListener('click', function() {
+    this.parentElement.querySelectorAll('.filter-chip').forEach(function(x) { x.classList.remove('active'); });
+    this.classList.add('active');
+    var filterVal = this.textContent;
+    // Determine which page we're on
+    var contactsPage = document.getElementById('page-contacts');
+    var contentPage = document.getElementById('page-content');
+    if (contactsPage && contactsPage.classList.contains('active')) {
+      renderContacts(filterVal);
+    } else if (contentPage && contentPage.classList.contains('active')) {
+      renderContentFeed(filterVal);
+    }
+  });
+});
+
+// Init contacts on load
+renderContacts();
 </script>
 </body>
 </html>
