@@ -12,54 +12,94 @@ type ProposalForContact = {
   proposed: ProposedTopic[];
 };
 
-const INDUSTRY_HEURISTICS: Record<string, string[]> = {
-  "asset management": ["Asset Management", "Multi-Asset"],
-  "private credit": ["Private Credit", "M&A"],
-  "private equity": ["Private Equity", "M&A"],
-  "hedge funds": ["Hedge Funds", "Risk & Compliance"],
-  "market making": ["Market Making", "Trading Tech"],
-  "investment banking": ["M&A", "IPO Markets"],
-  "venture capital": ["Private Equity"],
-  "real estate": ["Private Equity"],
-  "insurance": ["Risk & Compliance", "Multi-Asset"],
-  "fintech": ["AI in Finance", "Crypto / Digital"],
-  "crypto": ["Crypto / Digital"],
-};
+// Title-keyword → HR topic map. Confidence 0..1. Several keywords can fire and
+// we keep the highest confidence per topic. The heuristic runs in demo mode
+// (no Anthropic key) so the topics here MUST line up with the active HR
+// taxonomy seeded by 0006_hr_taxonomy.sql.
+const TITLE_HEURISTICS: Array<[RegExp, string, number]> = [
+  // Acquisition / sourcing
+  [/talent\s*acquisition|recruit(?:ing|er)?|sourcing/i, "Talent Acquisition", 0.95],
+  [/talent\s*strateg/i, "Talent Acquisition", 0.85],
+  [/executive\s*search|executive\s*recruit/i, "Executive Search", 0.95],
 
-const TITLE_HEURISTICS: Array<[RegExp, string]> = [
-  [/risk|compliance|audit|regul/i, "Risk & Compliance"],
-  [/esg|sustainab|climate/i, "ESG"],
-  [/m&a|merger|acquisition/i, "M&A"],
-  [/macro|rates|fixed.income|fx/i, "Macro & Rates"],
-  [/ai|machine.learning|data.science/i, "AI in Finance"],
-  [/trading|execution|market.maker/i, "Trading Tech"],
-  [/multi.?asset|allocation/i, "Multi-Asset"],
+  // Comp & total rewards
+  [/compensation|total\s*rewards?|\brewards?\b|payroll|equity\s*plan/i, "Compensation & Benefits", 0.95],
+
+  // Performance / promotion / talent management
+  [/performance|promotion|calibration|talent\s*management/i, "Performance & Promotion", 0.85],
+
+  // L&D
+  [/l\s*&\s*d|learning|leadership\s*development|coaching/i, "L&D / Learning", 0.85],
+
+  // Workforce planning / people ops
+  [/people\s*ops|people\s*operation|workforce|organi[sz]ation\s*design|head\s*of\s*hr|head\s*of\s*human\s*resources|chief\s*human\s*resources|chief\s*people|chro\b|cpo\b/i, "Workforce Planning", 0.8],
+
+  // DEI
+  [/\bdei\b|diversity|inclusion|belonging|equity\s*&|equity\s*and/i, "DEI & Inclusion", 0.95],
+
+  // Employer brand
+  [/employer\s*brand|talent\s*brand|recruiting\s*marketing/i, "Employer Brand", 0.9],
+
+  // HR Tech
+  [/hr\s*tech|hris|workday|greenhouse|lattice|ats\b|people\s*analytics/i, "HR Tech / HRIS", 0.9],
+
+  // Compliance & employment law
+  [/compliance|employment\s*law|labor\s*law|wage\s*&\s*hour|classification/i, "Compliance & Employment Law", 0.85],
+
+  // AI in HR
+  [/ai\s*in\s*hr|hr\s*ai|automation\s*hr|llm\s*hr/i, "AI in HR", 0.8],
+
+  // ESG / human capital reporting
+  [/human\s*capital|esg|sustainab|csr|corporate\s*responsibility/i, "ESG & Human Capital", 0.8],
+
+  // Hybrid / RTO
+  [/hybrid|return.?to.?office|\brto\b|workplace\s*policy/i, "Hybrid & Return-to-Office", 0.9],
 ];
 
+// Generic senior HR roles get a broader spread because the title alone doesn't
+// disambiguate which sub-area they own.
+const SENIOR_HR = /chro\b|chief\s*human\s*resources|chief\s*people|head\s*of\s*hr|head\s*of\s*human\s*resources/i;
+
 function heuristicProposals(
-  contact: Pick<ContactRow, "industry" | "title">,
+  contact: Pick<ContactRow, "industry" | "title" | "company">,
   taxonomy: string[]
 ): ProposedTopic[] {
   const now = new Date().toISOString();
   const proposed = new Map<string, number>();
+  const taxonomySet = new Set(taxonomy);
 
-  if (contact.industry) {
-    const matched = INDUSTRY_HEURISTICS[contact.industry.toLowerCase()] ?? [];
-    matched.forEach((t, idx) => proposed.set(t, Math.max(proposed.get(t) ?? 0, idx === 0 ? 0.9 : 0.7)));
-    // Direct industry → topic match by label
-    const direct = taxonomy.find((t) => t.toLowerCase() === contact.industry!.toLowerCase());
-    if (direct) proposed.set(direct, 0.95);
-  }
   if (contact.title) {
-    for (const [pattern, topic] of TITLE_HEURISTICS) {
+    for (const [pattern, topic, confidence] of TITLE_HEURISTICS) {
       if (pattern.test(contact.title)) {
-        proposed.set(topic, Math.max(proposed.get(topic) ?? 0, 0.75));
+        proposed.set(topic, Math.max(proposed.get(topic) ?? 0, confidence));
+      }
+    }
+    // Senior HR roles: spread some confidence across Compensation +
+    // Performance + Workforce so the chip review surfaces multiple options.
+    if (SENIOR_HR.test(contact.title)) {
+      for (const broad of ["Compensation & Benefits", "Performance & Promotion", "Workforce Planning"]) {
+        proposed.set(broad, Math.max(proposed.get(broad) ?? 0, 0.65));
       }
     }
   }
 
+  // Industry context: every contact in this CRM is an asset-management HR
+  // leader, so tag with the industry context topic at low-but-meaningful
+  // confidence. Helps the "by industry" view without crowding out role-
+  // specific tags.
+  if (taxonomySet.has("Asset Management (industry)")) {
+    proposed.set("Asset Management (industry)", Math.max(proposed.get("Asset Management (industry)") ?? 0, 0.7));
+  }
+
+  // Direct industry-label match (kept for forward compatibility with future
+  // industry values like "Insurance" if Michael ever expands his book).
+  if (contact.industry) {
+    const direct = taxonomy.find((t) => t.toLowerCase() === contact.industry!.toLowerCase());
+    if (direct) proposed.set(direct, Math.max(proposed.get(direct) ?? 0, 0.9));
+  }
+
   return Array.from(proposed.entries())
-    .filter(([topic]) => taxonomy.includes(topic))
+    .filter(([topic]) => taxonomySet.has(topic))
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3)
     .map(([topic, confidence]) => ({
