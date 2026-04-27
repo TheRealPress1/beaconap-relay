@@ -178,6 +178,68 @@ export type LatestResearchRow = {
   finding_count: number;
 };
 
+export type OutreachTone = "warm" | "professional" | "curious" | "provocative";
+
+export type OutreachDraftStatus = "draft" | "copied" | "sent" | "archived";
+
+export type OutreachStyleKind = "good_example" | "bad_example" | "voice_note";
+
+export type OutreachUsedFinding = {
+  id: string;
+  title: string;
+  url: string | null;
+};
+
+export type OutreachDraftRow = {
+  id: string;
+  contact_id: string;
+  run_id: string | null;
+  tone: OutreachTone;
+  status: OutreachDraftStatus;
+  subject: string;
+  body: string;
+  used_findings: OutreachUsedFinding[];
+  sent_at: string | null;
+  sent_via: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type OutreachDraftInsert = {
+  id?: string;
+  contact_id: string;
+  run_id?: string | null;
+  tone?: OutreachTone;
+  status?: OutreachDraftStatus;
+  subject: string;
+  body: string;
+  used_findings?: OutreachUsedFinding[];
+  sent_at?: string | null;
+  sent_via?: string | null;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type OutreachStyleRow = {
+  id: string;
+  kind: OutreachStyleKind;
+  label: string;
+  body: string;
+  archived_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type OutreachStyleInsert = {
+  id?: string;
+  kind: OutreachStyleKind;
+  label: string;
+  body: string;
+  archived_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+};
+
 export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "12";
@@ -220,6 +282,18 @@ export type Database = {
         Update: Partial<SearchCacheRow>;
         Relationships: [];
       };
+      outreach_drafts: {
+        Row: OutreachDraftRow;
+        Insert: OutreachDraftInsert;
+        Update: Partial<Omit<OutreachDraftRow, "id">>;
+        Relationships: [];
+      };
+      outreach_style: {
+        Row: OutreachStyleRow;
+        Insert: OutreachStyleInsert;
+        Update: Partial<Omit<OutreachStyleRow, "id">>;
+        Relationships: [];
+      };
     };
     Views: {
       topic_usage: {
@@ -230,6 +304,10 @@ export type Database = {
         Row: LatestResearchRow;
         Relationships: [];
       };
+      latest_outreach_draft: {
+        Row: OutreachDraftRow;
+        Relationships: [];
+      };
     };
     Functions: Record<string, never>;
     Enums: {
@@ -237,6 +315,9 @@ export type Database = {
       csv_import_status: CsvImportStatus;
       research_run_status: ResearchRunStatus;
       research_finding_kind: ResearchFindingKind;
+      outreach_draft_status: OutreachDraftStatus;
+      outreach_tone: OutreachTone;
+      outreach_style_kind: OutreachStyleKind;
     };
     CompositeTypes: Record<string, never>;
   };
