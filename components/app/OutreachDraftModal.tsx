@@ -1,7 +1,16 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { Check, Copy, ExternalLink, Mail, RefreshCw, Send, Sparkles } from "lucide-react";
+import {
+  Check,
+  Copy,
+  ExternalLink,
+  Mail,
+  RefreshCw,
+  Rocket,
+  Send,
+  Sparkles,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -49,6 +58,7 @@ export function OutreachDraftModal({
   const [tone, setTone] = useState<OutreachTone>(initialDraft?.tone ?? "warm");
   const [subject, setSubject] = useState(initialDraft?.subject ?? "");
   const [body, setBody] = useState(initialDraft?.body ?? "");
+  const [sequenceId, setSequenceId] = useState("");
   const [generating, startGenerate] = useTransition();
   const [persisting, startPersist] = useTransition();
   const [dirty, setDirty] = useState(false);
@@ -149,6 +159,33 @@ export function OutreachDraftModal({
         onOpenChange(false);
       } catch (err) {
         toast.error(err instanceof Error ? err.message : "Update failed");
+      }
+    });
+  }
+
+  function handlePushApollo() {
+    startPersist(async () => {
+      const saved = await persistEdits();
+      if (!saved) return;
+      if (saved.id.startsWith("local-")) {
+        toast.error("Connect Supabase to push to Apollo.");
+        return;
+      }
+      try {
+        const res = await fetch("/api/apollo/sequence", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            draftId: saved.id,
+            sequenceId: sequenceId.trim() || undefined,
+          }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error ?? "Apollo push failed");
+        toast.success(json.message ?? `Pushed to sequence ${json.sequence_id}`);
+        onOpenChange(false);
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Apollo push failed");
       }
     });
   }
@@ -268,6 +305,30 @@ export function OutreachDraftModal({
               </div>
             )}
           </aside>
+        </div>
+
+        <div className="mt-2 rounded-md border border-border/60 bg-bg-secondary px-3 py-2.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <Label className="text-[10.5px] uppercase tracking-wider text-text-tertiary">
+              Apollo sequence
+            </Label>
+            <Input
+              value={sequenceId}
+              onChange={(e) => setSequenceId(e.target.value)}
+              placeholder="Sequence id (or set APOLLO_DEFAULT_SEQUENCE_ID)"
+              className="h-8 flex-1 min-w-[200px]"
+              disabled={generating || persisting}
+            />
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={handlePushApollo}
+              disabled={generating || persisting || !draft}
+            >
+              <Rocket className="mr-1 h-3.5 w-3.5" />
+              Push to Apollo
+            </Button>
+          </div>
         </div>
 
         <DialogFooter className="flex flex-wrap gap-2">

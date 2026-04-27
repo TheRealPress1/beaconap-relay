@@ -42,3 +42,12 @@ export type ResearchContact = {
   industry: string | null;
   topics: string[];
 };
+
+/** A prior interaction (e.g. a Granola meeting) we want Claude to acknowledge
+ *  in the briefing without re-surfacing as a "new" finding. */
+export type PriorInteraction = {
+  occurred_at: string;
+  source: string;
+  title: string | null;
+  summary: string | null;
+};

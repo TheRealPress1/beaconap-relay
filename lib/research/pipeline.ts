@@ -7,8 +7,16 @@ import { readCache, writeCache } from "./cache";
 import { classifyFindings } from "./prompts";
 import { demoBriefing } from "./demo";
 import { assertDailyQuota } from "./quota";
-import type { BriefingPayload, ResearchContact, SearchHit } from "./types";
+import { listInteractionsForContact } from "@/lib/interactions/repo";
+import type {
+  BriefingPayload,
+  PriorInteraction,
+  ResearchContact,
+  SearchHit,
+} from "./types";
 import type { ResearchRunRow } from "@/lib/supabase/types";
+
+const PRIOR_LOOKBACK_DAYS = 90;
 
 export type RunResult = {
   run: ResearchRunRow;
@@ -65,9 +73,10 @@ export async function runResearch(contact: ResearchContact): Promise<RunResult> 
   }
 
   try {
+    const priorInteractions = await loadPriorInteractions(contact.id);
     const briefing = demoMode
       ? demoBriefing(contact)
-      : await runLive(contact, queries, provider);
+      : await runLive(contact, queries, provider, priorInteractions);
 
     if (supabase) {
       const { error: upError } = await supabase
@@ -129,7 +138,8 @@ export async function runResearch(contact: ResearchContact): Promise<RunResult> 
 async function runLive(
   contact: ResearchContact,
   queries: string[],
-  provider: { id: string; search: (q: string) => Promise<SearchHit[]> }
+  provider: { id: string; search: (q: string) => Promise<SearchHit[]> },
+  priorInteractions: PriorInteraction[]
 ): Promise<BriefingPayload> {
   const all: SearchHit[] = [];
   for (const query of queries) {
@@ -147,7 +157,21 @@ async function runLive(
   }
 
   const deduped = dedupeByUrl(all);
-  return classifyFindings(contact, deduped);
+  return classifyFindings(contact, deduped, priorInteractions);
+}
+
+async function loadPriorInteractions(contactId: string): Promise<PriorInteraction[]> {
+  if (!isSupabaseConfigured()) return [];
+  const cutoff = Date.now() - PRIOR_LOOKBACK_DAYS * 24 * 60 * 60 * 1000;
+  const rows = await listInteractionsForContact(contactId, 8);
+  return rows
+    .filter((r) => new Date(r.occurred_at).getTime() >= cutoff)
+    .map<PriorInteraction>((r) => ({
+      occurred_at: r.occurred_at,
+      source: r.source,
+      title: r.title,
+      summary: r.summary,
+    }));
 }
 
 function dedupeByUrl(hits: SearchHit[]): SearchHit[] {

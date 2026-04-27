@@ -1,7 +1,13 @@
 import "server-only";
 import { askJson } from "@/lib/anthropic";
 import type { ResearchFindingKind } from "@/lib/supabase/types";
-import type { BriefingPayload, Finding, ResearchContact, SearchHit } from "./types";
+import type {
+  BriefingPayload,
+  Finding,
+  PriorInteraction,
+  ResearchContact,
+  SearchHit,
+} from "./types";
 
 const SYSTEM = `You are a senior research analyst preparing a one-page client briefing for a CEO who is about to send personalized outreach. The CEO works in capital markets and finance consulting.
 
@@ -43,9 +49,22 @@ Rules:
 
 export async function classifyFindings(
   contact: ResearchContact,
-  hits: SearchHit[]
+  hits: SearchHit[],
+  priorInteractions: PriorInteraction[] = []
 ): Promise<BriefingPayload> {
   const fallback = heuristicBriefing(contact, hits);
+
+  const priorBlock =
+    priorInteractions.length > 0
+      ? `\n\nPrior conversations (DO NOT re-surface as findings; use to avoid telling the CEO things they already discussed and to ground talking points):\n${JSON.stringify(
+          priorInteractions.slice(0, 8).map((p) => ({
+            occurred_at: p.occurred_at,
+            source: p.source,
+            title: p.title,
+            summary: p.summary?.slice(0, 600),
+          }))
+        )}`
+      : "";
 
   const prompt = `Contact:\n${JSON.stringify({
     name: contact.full_name,
@@ -53,7 +72,7 @@ export async function classifyFindings(
     title: contact.title,
     industry: contact.industry,
     topics: contact.topics,
-  })}\n\nSearch results:\n${JSON.stringify(
+  })}${priorBlock}\n\nSearch results:\n${JSON.stringify(
     hits.slice(0, 25).map((h) => ({
       title: h.title,
       url: h.url,

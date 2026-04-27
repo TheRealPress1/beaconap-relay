@@ -240,6 +240,77 @@ type OutreachStyleInsert = {
   updated_at?: string;
 };
 
+export type InteractionKind = "meeting" | "email" | "call" | "enrichment" | "note";
+
+export type InteractionSource =
+  | "granola"
+  | "apollo"
+  | "gmail"
+  | "outlook"
+  | "manual";
+
+export type ContactInteractionRow = {
+  id: string;
+  contact_id: string;
+  kind: InteractionKind;
+  source: InteractionSource;
+  source_id: string | null;
+  occurred_at: string;
+  title: string | null;
+  summary: string | null;
+  raw: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+};
+
+type ContactInteractionInsert = {
+  id?: string;
+  contact_id: string;
+  kind: InteractionKind;
+  source: InteractionSource;
+  source_id?: string | null;
+  occurred_at?: string;
+  title?: string | null;
+  summary?: string | null;
+  raw?: Record<string, unknown>;
+  created_at?: string;
+  updated_at?: string;
+};
+
+export type ConnectorSyncStatus = "idle" | "running" | "done" | "failed";
+
+export type ConnectorSyncRow = {
+  provider: string;
+  last_synced_at: string | null;
+  last_cursor: string | null;
+  status: ConnectorSyncStatus;
+  matched_count: number;
+  inserted_count: number;
+  error: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type ConnectorSyncInsert = {
+  provider: string;
+  last_synced_at?: string | null;
+  last_cursor?: string | null;
+  status?: ConnectorSyncStatus;
+  matched_count?: number;
+  inserted_count?: number;
+  error?: string | null;
+};
+
+export type LatestInteractionRow = {
+  id: string;
+  contact_id: string;
+  kind: InteractionKind;
+  source: InteractionSource;
+  occurred_at: string;
+  title: string | null;
+  summary: string | null;
+};
+
 export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "12";
@@ -294,6 +365,18 @@ export type Database = {
         Update: Partial<Omit<OutreachStyleRow, "id">>;
         Relationships: [];
       };
+      contact_interactions: {
+        Row: ContactInteractionRow;
+        Insert: ContactInteractionInsert;
+        Update: Partial<Omit<ContactInteractionRow, "id">>;
+        Relationships: [];
+      };
+      connector_syncs: {
+        Row: ConnectorSyncRow;
+        Insert: ConnectorSyncInsert;
+        Update: Partial<Omit<ConnectorSyncRow, "provider">>;
+        Relationships: [];
+      };
     };
     Views: {
       topic_usage: {
@@ -302,6 +385,10 @@ export type Database = {
       };
       latest_research: {
         Row: LatestResearchRow;
+        Relationships: [];
+      };
+      latest_interaction: {
+        Row: LatestInteractionRow;
         Relationships: [];
       };
       latest_outreach_draft: {
@@ -318,6 +405,9 @@ export type Database = {
       outreach_draft_status: OutreachDraftStatus;
       outreach_tone: OutreachTone;
       outreach_style_kind: OutreachStyleKind;
+      interaction_kind: InteractionKind;
+      interaction_source: InteractionSource;
+      connector_sync_status: ConnectorSyncStatus;
     };
     CompositeTypes: Record<string, never>;
   };

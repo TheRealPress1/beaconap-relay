@@ -3,10 +3,13 @@ import { PageHeader } from "@/components/app/PageHeader";
 import { ContactAvatar } from "@/components/app/ContactAvatar";
 import { StatusTag } from "@/components/app/StatusTag";
 import { BriefingCard } from "@/components/app/BriefingCard";
+import { InteractionTimeline } from "@/components/app/InteractionTimeline";
+import { EnrichWithApolloButton } from "@/components/app/EnrichWithApolloButton";
 import { getContactById } from "@/lib/contacts/repo";
 import { getLatestBriefing } from "@/lib/research/repo";
 import { isResearchDemoMode } from "@/lib/research/searchProvider";
 import { getLatestDraftForContact } from "@/lib/outreach/repo";
+import { listInteractionsForContact } from "@/lib/interactions/repo";
 import type { ResearchContact } from "@/lib/research/types";
 
 export default async function ContactDetailPage({
@@ -29,9 +32,10 @@ export default async function ContactDetailPage({
     topics: contact.topics ?? [],
   };
 
-  const [latest, latestDraft] = await Promise.all([
+  const [latest, latestDraft, interactions] = await Promise.all([
     getLatestBriefing(researchContact, { fallbackToDemo: false }),
     getLatestDraftForContact(contact.id),
+    listInteractionsForContact(contact.id, 25),
   ]);
   const demoMode = isResearchDemoMode();
 
@@ -40,6 +44,7 @@ export default async function ContactDetailPage({
       <PageHeader
         title={contact.full_name}
         subtitle={`${contact.title ?? ""}${contact.company ? ` · ${contact.company}` : ""}`}
+        actions={<EnrichWithApolloButton contactId={contact.id} />}
       />
       <div className="px-8 py-7 space-y-6">
         <div className="flex items-start gap-6 rounded-xl border border-border bg-bg-card p-6">
@@ -93,6 +98,11 @@ export default async function ContactDetailPage({
             </dl>
           </div>
         </div>
+
+        <InteractionTimeline
+          interactions={interactions}
+          contactFirstName={contact.first_name}
+        />
 
         <BriefingCard
           contactId={contact.id}
