@@ -83,6 +83,101 @@ export type TopicUsageRow = TopicTaxonomyRow & {
   contact_count: number;
 };
 
+export type ResearchRunStatus = "queued" | "running" | "done" | "failed";
+
+export type ResearchFindingKind =
+  | "podcast"
+  | "article"
+  | "interview"
+  | "linkedin_post"
+  | "other";
+
+export type ResearchRunRow = {
+  id: string;
+  contact_id: string;
+  status: ResearchRunStatus;
+  started_at: string;
+  finished_at: string | null;
+  model: string | null;
+  search_provider: string | null;
+  query_count: number;
+  error: string | null;
+  talking_points: string[];
+  created_at: string;
+};
+
+type ResearchRunInsert = {
+  id?: string;
+  contact_id: string;
+  status?: ResearchRunStatus;
+  started_at?: string;
+  finished_at?: string | null;
+  model?: string | null;
+  search_provider?: string | null;
+  query_count?: number;
+  error?: string | null;
+  talking_points?: string[];
+  created_at?: string;
+};
+
+export type ResearchFindingRow = {
+  id: string;
+  run_id: string;
+  contact_id: string;
+  kind: ResearchFindingKind;
+  title: string;
+  url: string | null;
+  source: string | null;
+  published_at: string | null;
+  summary: string | null;
+  talking_points: string[];
+  raw_excerpt: string | null;
+  relevance_score: number;
+  created_at: string;
+};
+
+type ResearchFindingInsert = {
+  id?: string;
+  run_id: string;
+  contact_id: string;
+  kind: ResearchFindingKind;
+  title: string;
+  url?: string | null;
+  source?: string | null;
+  published_at?: string | null;
+  summary?: string | null;
+  talking_points?: string[];
+  raw_excerpt?: string | null;
+  relevance_score?: number;
+  created_at?: string;
+};
+
+export type SearchCacheRow = {
+  query_hash: string;
+  provider: string;
+  results: unknown;
+  cached_at: string;
+};
+
+type SearchCacheInsert = {
+  query_hash: string;
+  provider: string;
+  results: unknown;
+  cached_at?: string;
+};
+
+export type LatestResearchRow = {
+  id: string;
+  contact_id: string;
+  status: ResearchRunStatus;
+  started_at: string;
+  finished_at: string | null;
+  search_provider: string | null;
+  model: string | null;
+  talking_points: string[];
+  finding_count: number;
+};
+
 export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "12";
@@ -107,10 +202,32 @@ export type Database = {
         Update: Partial<Omit<TopicTaxonomyRow, "id">>;
         Relationships: [];
       };
+      research_runs: {
+        Row: ResearchRunRow;
+        Insert: ResearchRunInsert;
+        Update: Partial<Omit<ResearchRunRow, "id">>;
+        Relationships: [];
+      };
+      research_findings: {
+        Row: ResearchFindingRow;
+        Insert: ResearchFindingInsert;
+        Update: Partial<Omit<ResearchFindingRow, "id">>;
+        Relationships: [];
+      };
+      search_cache: {
+        Row: SearchCacheRow;
+        Insert: SearchCacheInsert;
+        Update: Partial<SearchCacheRow>;
+        Relationships: [];
+      };
     };
     Views: {
       topic_usage: {
         Row: TopicUsageRow;
+        Relationships: [];
+      };
+      latest_research: {
+        Row: LatestResearchRow;
         Relationships: [];
       };
     };
@@ -118,6 +235,8 @@ export type Database = {
     Enums: {
       contact_status: ContactStatus;
       csv_import_status: CsvImportStatus;
+      research_run_status: ResearchRunStatus;
+      research_finding_kind: ResearchFindingKind;
     };
     CompositeTypes: Record<string, never>;
   };
