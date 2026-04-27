@@ -1,13 +1,12 @@
 import { notFound } from "next/navigation";
-import { Mail } from "lucide-react";
 import { PageHeader } from "@/components/app/PageHeader";
 import { ContactAvatar } from "@/components/app/ContactAvatar";
 import { StatusTag } from "@/components/app/StatusTag";
 import { BriefingCard } from "@/components/app/BriefingCard";
-import { Button } from "@/components/ui/button";
 import { getContactById } from "@/lib/contacts/repo";
 import { getLatestBriefing } from "@/lib/research/repo";
 import { isResearchDemoMode } from "@/lib/research/searchProvider";
+import { getLatestDraftForContact } from "@/lib/outreach/repo";
 import type { ResearchContact } from "@/lib/research/types";
 
 export default async function ContactDetailPage({
@@ -30,7 +29,10 @@ export default async function ContactDetailPage({
     topics: contact.topics ?? [],
   };
 
-  const latest = await getLatestBriefing(researchContact, { fallbackToDemo: false });
+  const [latest, latestDraft] = await Promise.all([
+    getLatestBriefing(researchContact, { fallbackToDemo: false }),
+    getLatestDraftForContact(contact.id),
+  ]);
   const demoMode = isResearchDemoMode();
 
   return (
@@ -38,12 +40,6 @@ export default async function ContactDetailPage({
       <PageHeader
         title={contact.full_name}
         subtitle={`${contact.title ?? ""}${contact.company ? ` · ${contact.company}` : ""}`}
-        actions={
-          <Button disabled>
-            <Mail className="mr-2 h-4 w-4" />
-            Draft outreach (Phase 4)
-          </Button>
-        }
       />
       <div className="px-8 py-7 space-y-6">
         <div className="flex items-start gap-6 rounded-xl border border-border bg-bg-card p-6">
@@ -101,6 +97,7 @@ export default async function ContactDetailPage({
         <BriefingCard
           contactId={contact.id}
           contactFirstName={contact.first_name}
+          contactEmail={contact.email}
           initialBriefing={latest?.briefing ?? null}
           initialRunMeta={
             latest
@@ -112,6 +109,7 @@ export default async function ContactDetailPage({
                 }
               : null
           }
+          initialDraft={latestDraft}
           demoMode={demoMode}
         />
       </div>

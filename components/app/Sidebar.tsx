@@ -11,7 +11,9 @@ import {
   ListChecks,
   LogOut,
   Mail,
+  MessageSquareText,
   Mic,
+  Quote,
   Send,
   Settings,
   Sparkles,
@@ -67,6 +69,7 @@ const SECTIONS: NavSection[] = [
   {
     label: "Intelligence",
     items: [
+      { href: "/outreach", label: "Outreach", icon: MessageSquareText },
       { href: "/content", label: "Content Feed", icon: BookOpen },
       { href: "/insights", label: "AI Insights", icon: Sparkles },
     ],
@@ -85,6 +88,7 @@ const SECTIONS: NavSection[] = [
     items: [
       { href: "/settings", label: "API Settings", icon: Settings },
       { href: "/settings/taxonomy", label: "Topic taxonomy", icon: Tag },
+      { href: "/settings/style", label: "Outreach voice", icon: Quote },
     ],
   },
 ];

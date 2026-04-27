@@ -7,11 +7,14 @@ import {
   ChevronRight,
   ExternalLink,
   Headphones,
+  Mail,
   MessageSquareText,
   Quote,
   RefreshCw,
   Sparkles,
 } from "lucide-react";
+import { OutreachDraftModal } from "./OutreachDraftModal";
+import type { OutreachDraftRow } from "@/lib/supabase/types";
 
 function Linkedin(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -43,6 +46,7 @@ import type { ResearchFindingKind } from "@/lib/supabase/types";
 type Props = {
   contactId: string;
   contactFirstName: string;
+  contactEmail: string | null;
   initialBriefing: BriefingPayload | null;
   initialRunMeta: {
     started_at: string;
@@ -50,6 +54,7 @@ type Props = {
     search_provider: string | null;
     finding_count: number;
   } | null;
+  initialDraft: OutreachDraftRow | null;
   demoMode: boolean;
 };
 
@@ -77,13 +82,16 @@ const SECTION_ORDER: ResearchFindingKind[] = [
 export function BriefingCard({
   contactId,
   contactFirstName,
+  contactEmail,
   initialBriefing,
   initialRunMeta,
+  initialDraft,
   demoMode,
 }: Props) {
   const [briefing, setBriefing] = useState<BriefingPayload | null>(initialBriefing);
   const [meta, setMeta] = useState(initialRunMeta);
   const [pending, startTransition] = useTransition();
+  const [draftOpen, setDraftOpen] = useState(false);
 
   function refresh() {
     startTransition(async () => {
@@ -143,20 +151,39 @@ export function BriefingCard({
             </p>
           )}
         </div>
-        <Button onClick={refresh} disabled={pending} size="sm">
-          {pending ? (
-            <>
-              <Sparkles className="mr-1.5 h-3.5 w-3.5 animate-pulse" />
-              Researching…
-            </>
-          ) : (
-            <>
-              <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
-              {briefing ? "Refresh research" : "Research"}
-            </>
-          )}
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={refresh} disabled={pending} size="sm" variant="secondary">
+            {pending ? (
+              <>
+                <Sparkles className="mr-1.5 h-3.5 w-3.5 animate-pulse" />
+                Researching…
+              </>
+            ) : (
+              <>
+                <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
+                {briefing ? "Refresh research" : "Research"}
+              </>
+            )}
+          </Button>
+          <Button
+            onClick={() => setDraftOpen(true)}
+            disabled={pending || !briefing}
+            size="sm"
+          >
+            <Mail className="mr-1.5 h-3.5 w-3.5" />
+            Draft outreach
+          </Button>
+        </div>
       </header>
+
+      <OutreachDraftModal
+        open={draftOpen}
+        onOpenChange={setDraftOpen}
+        contactId={contactId}
+        contactEmail={contactEmail}
+        contactFirstName={contactFirstName}
+        initialDraft={initialDraft}
+      />
 
       {pending && !briefing ? (
         <BriefingSkeleton />
