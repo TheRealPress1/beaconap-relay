@@ -5,46 +5,46 @@ const daysAgo = (n: number) => new Date(Date.now() - n * 24 * 60 * 60 * 1000).to
 
 export const DEMO_MEETINGS: GranolaMeeting[] = [
   {
-    id: "demo-mtg-sarah",
-    title: "BlackRock — AI tooling roadmap (Sarah Chen)",
-    occurred_at: daysAgo(8),
-    duration_minutes: 45,
-    attendees: [
-      { email: "sarah.chen@blackrock.com", name: "Sarah Chen" },
-      { email: "michael@beaconap.com", name: "Michael Sands" },
-    ],
-    summary:
-      "Sarah walked through BlackRock's evaluation framework for LLM vendors. Two priorities: explainability for portfolio managers, and on-prem inference for any data touching client positions. She asked for case studies from comparable funds; Michael owes a write-up by next Friday.",
-    transcript:
-      "Sarah: We've shortlisted three vendors but the partners pushed back hard on opaque models...",
-  },
-  {
-    id: "demo-mtg-david",
-    title: "Apollo Global — private credit AI screen (David Park)",
-    occurred_at: daysAgo(15),
-    duration_minutes: 30,
-    attendees: [
-      { email: "david.park@apollo.com", name: "David Park" },
-      { email: "michael@beaconap.com", name: "Michael Sands" },
-    ],
-    summary:
-      "David is rebuilding the deal-screening pipeline and wants an LLM-assisted memo step before partner review. Concern: false positives wasting analyst time. He wants a 30-day pilot with one originator.",
-    transcript:
-      "David: The bottleneck right now isn't deal flow, it's the time it takes to disqualify the bottom half...",
-  },
-  {
-    id: "demo-mtg-marcus",
-    title: "Citadel Securities — execution co-pilot prototype (Marcus Wei)",
-    occurred_at: daysAgo(22),
+    id: "demo-mtg-jessica-kung",
+    title: "TCW — investment talent strategy review (Jessica Kung)",
+    occurred_at: daysAgo(6),
     duration_minutes: 50,
     attendees: [
-      { email: "marcus.wei@citadel.com", name: "Marcus Wei" },
+      { email: "jessica.kung@tcw.com", name: "Jessica Kung" },
       { email: "michael@beaconap.com", name: "Michael Sands" },
     ],
     summary:
-      "Marcus showed a Bloomberg-side prototype that surfaces unusual order-book patterns alongside historical analogues. He wants to know how the agent layer would explain a recommendation to a desk head in <2 seconds. Latency budget is the hard constraint.",
+      "Jessica walked through TCW's plan to rebuild investment-team comp benchmarking against the boutique peer set. She's frustrated with the lag in the current consultant deliverables and wants a tighter loop: refreshed data, opinionated recommendations, faster turnaround. Michael owes a one-pager on what a quarterly cadence would look like by next Friday.",
     transcript:
-      "Marcus: Latency is non-negotiable; if it costs us thirty milliseconds we won't ship it...",
+      "Jessica: The board wants a number by the next meeting and the consultants are still calibrating. We can't run an investment org on quarterly lag...",
+  },
+  {
+    id: "demo-mtg-penny-alexander",
+    title: "Franklin Templeton — global workforce planning + RTO (Penny Alexander)",
+    occurred_at: daysAgo(13),
+    duration_minutes: 35,
+    attendees: [
+      { email: "penny.alexander@franklintempleton.com", name: "Penny Alexander" },
+      { email: "michael@beaconap.com", name: "Michael Sands" },
+    ],
+    summary:
+      "Penny is balancing a global RTO mandate with a hybrid-or-leave problem in the New York investment teams. She's looking for benchmarks on how peer asset managers are framing the policy without bleeding senior talent. Asked for an exec brief comparing 5 named peers; pilot study scope to be defined.",
+    transcript:
+      "Penny: We can't be the firm where the policy lands and the ten people we cannot afford to lose hand in their notice. Tell me what the others are actually doing, not what they're saying...",
+  },
+  {
+    id: "demo-mtg-nicole-zimmerman",
+    title: "GMO — DEI program redesign at boutique scale (Nicole Zimmerman)",
+    occurred_at: daysAgo(24),
+    duration_minutes: 45,
+    attendees: [
+      { email: "nicole.zimmerman@gmo.com", name: "Nicole Zimmerman" },
+      { email: "michael@beaconap.com", name: "Michael Sands" },
+    ],
+    summary:
+      "Nicole is stripping GMO's DEI program back to first principles after an internal audit found that volume of programs ≠ outcomes. She wants Michael's read on what 3 things actually move the needle at a sub-1000-person firm. Follow-up: Michael to share a memo of pattern matches across his book.",
+    transcript:
+      "Nicole: I have eleven initiatives and I think two of them are doing real work. I'd rather kill nine and double down than keep performing them...",
   },
 ];
 
